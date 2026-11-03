@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Library Admin — Web Contemporary Exam</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">📚</span>
+        <div>
+          <strong>Library Admin</strong>
+          <small>CRUD + Upload demo</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#books" class="nav-link is-active" data-view="books">หนังสือ</a>
+        <a href="#categories" class="nav-link" data-view="categories">หมวดหมู่</a>
+      </nav>
+
+      <footer class="sidebar-foot">
+        <span>Express + SQLite</span>
+        <a href="/study/" target="_blank" rel="noreferrer">คู่มือสอบ →</a>
+      </footer>
+    </aside>
+
+    <main class="main">
+      <!-- ================= BOOKS ================= -->
+      <section id="view-books" class="view">
+        <header class="view-head">
+          <div>
+            <h1>หนังสือ</h1>
+            <p class="muted">ตาราง <code>books</code> — มีความสัมพันธ์กับ <code>categories</code></p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-book">+ เพิ่มหนังสือ</button>
+        </header>
+
+        <div class="toolbar">
+          <input type="search" id="search-books" class="input" placeholder="ค้นหาชื่อหนังสือ / ผู้แต่ง..." />
+          <select id="filter-category" class="input">
+            <option value="">ทุกหมวดหมู่</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 84px">ปก</th>
+                <th>ชื่อหนังสือ</th>
+                <th>ผู้แต่ง</th>
+                <th>หมวดหมู่</th>
+                <th class="num">ราคา</th>
+                <th class="num">คงเหลือ</th>
+                <th class="actions">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="books-body">
+              <tr><td colspan="7" class="empty">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager" id="books-pager"></div>
+      </section>
+
+      <!-- ================= CATEGORIES ================= -->
+      <section id="view-categories" class="view is-hidden">
+        <header class="view-head">
+          <div>
+            <h1>หมวดหมู่</h1>
+            <p class="muted">ตาราง <code>categories</code> — 1 หมวดหมู่ มีได้หลายหนังสือ (1:N)</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-category">+ เพิ่มหมวดหมู่</button>
+        </header>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 70px">ID</th>
+                <th>ชื่อหมวดหมู่</th>
+                <th>คำอธิบาย</th>
+                <th class="num">จำนวนหนังสือ</th>
+                <th class="actions">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="categories-body">
+              <tr><td colspan="5" class="empty">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= BOOK MODAL ================= -->
+    <dialog id="book-dialog" class="dialog">
+      <form id="book-form" class="dialog-body" enctype="multipart/form-data">
+        <h2 id="book-dialog-title">เพิ่มหนังสือ</h2>
+        <input type="hidden" id="book-id" />
+
+        <label class="field">
+          <span>ชื่อหนังสือ *</span>
+          <input class="input" id="book-title" required />
+        </label>
+
+        <label class="field">
+          <span>ผู้แต่ง *</span>
+          <input class="input" id="book-author" required />
+        </label>
+
+        <div class="grid-2">
+          <label class="field">
+            <span>ราคา (บาท)</span>
+            <input class="input" id="book-price" type="number" min="0" step="0.01" value="0" />
+          </label>
+          <label class="field">
+            <span>คงเหลือ</span>
+            <input class="input" id="book-stock" type="number" min="0" step="1" value="0" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>หมวดหมู่ *</span>
+          <select class="input" id="book-category" required></select>
+        </label>
+
+        <label class="field">
+          <span>รูปปก (png / jpg / webp, ไม่เกิน 2 MB)</span>
+          <input class="input" id="book-cover" type="file" accept="image/*" />
+        </label>
+
+        <div class="cover-preview" id="cover-preview" hidden>
+          <img id="cover-preview-img" alt="preview" />
+        </div>
+
+        <p class="form-error" id="book-error" hidden></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-close-dialog>ยกเลิก</button>
+          <button type="submit" class="btn btn-primary" id="book-submit">บันทึก</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- ================= CATEGORY MODAL ================= -->
+    <dialog id="category-dialog" class="dialog">
+      <form id="category-form" class="dialog-body">
+        <h2 id="category-dialog-title">เพิ่มหมวดหมู่</h2>
+        <input type="hidden" id="category-id" />
+
+        <label class="field">
+          <span>ชื่อหมวดหมู่ *</span>
+          <input class="input" id="category-name" required />
+        </label>
+
+        <label class="field">
+          <span>คำอธิบาย</span>
+          <textarea class="input" id="category-description" rows="3"></textarea>
+        </label>
+
+        <p class="form-error" id="category-error" hidden></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-close-dialog>ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">บันทึก</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" hidden></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

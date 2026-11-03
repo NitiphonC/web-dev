@@ -1,0 +1,20 @@
+{
+  "name": "webcontemporary-exam",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Example project for the Web Engineering & Contemporary Technology practical exam: CRUD on 2 tables + file upload (Express + SQLite + vanilla JS)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:reset": "node -e \"require('fs').rmSync('library.db',{force:true});require('./db')\"",
+    "codegen": "openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o generated"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

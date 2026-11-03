@@ -1,0 +1,268 @@
+openapi: 3.0.3
+info:
+  title: Library Catalog API
+  description: |
+    API ตัวอย่างสำหรับข้อสอบ Web Engineering & Contemporary Technology
+    - CRUD 2 ตาราง (categories, books)
+    - อัปโหลดรูปปก (multipart/form-data)
+
+    ใช้ไฟล์นี้ gen โค้ดได้ เช่น
+      npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o generated
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: local dev
+
+tags:
+  - name: Categories
+  - name: Books
+  - name: Files
+
+paths:
+  /api/categories:
+    get:
+      tags: [Categories]
+      summary: ดูหมวดหมู่ทั้งหมด
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/CategoryWithCount" }
+    post:
+      tags: [Categories]
+      summary: เพิ่มหมวดหมู่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/categories/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    put:
+      tags: [Categories]
+      summary: แก้ไขหมวดหมู่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Categories]
+      summary: ลบหมวดหมู่ (ลบไม่ได้ถ้ายังมีหนังสืออยู่)
+      responses:
+        "204": { description: Deleted }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/books:
+    get:
+      tags: [Books]
+      summary: ค้นหา/แบ่งหน้าหนังสือ
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+          description: ค้นหาจากชื่อหนังสือหรือผู้แต่ง
+        - name: category_id
+          in: query
+          schema: { type: integer }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PagedBooks" }
+    post:
+      tags: [Books]
+      summary: เพิ่มหนังสือ (แนบรูปปกได้)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: "#/components/schemas/BookInputForm" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Book" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /api/books/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    get:
+      tags: [Books]
+      summary: ดูหนังสือ 1 รายการ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Book" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Books]
+      summary: แก้ไขหนังสือ (แนบรูปปกใหม่ได้)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: "#/components/schemas/BookInputForm" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Book" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Books]
+      summary: ลบหนังสือ (ลบไฟล์ปกด้วย)
+      responses:
+        "204": { description: Deleted }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/upload:
+    post:
+      tags: [Files]
+      summary: อัปโหลดไฟล์เดี่ยว
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename: { type: string }
+                  originalName: { type: string }
+                  size: { type: integer }
+                  url: { type: string }
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+
+  responses:
+    NotFound:
+      description: ไม่พบข้อมูล
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: ข้อมูลขัดแย้ง (เช่น ชื่อซ้ำ / ลบไม่ได้)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    BadRequest:
+      description: ข้อมูลไม่ถูกต้อง
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+
+    Category:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: Programming }
+        description: { type: string, example: หนังสือสายเขียนโปรแกรม }
+        created_at: { type: string, format: date-time }
+
+    CategoryWithCount:
+      allOf:
+        - $ref: "#/components/schemas/Category"
+        - type: object
+          properties:
+            book_count: { type: integer, example: 3 }
+
+    CategoryInput:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, example: Database }
+        description: { type: string, example: หนังสือฐานข้อมูล }
+
+    Book:
+      type: object
+      properties:
+        id: { type: integer, example: 10 }
+        title: { type: string, example: Clean Code }
+        author: { type: string, example: Robert C. Martin }
+        price: { type: number, example: 890 }
+        stock: { type: integer, example: 5 }
+        coverUrl: { type: string, nullable: true, example: /uploads/1700000000-clean-code.png }
+        categoryId: { type: integer, example: 1 }
+        categoryName: { type: string, example: Programming }
+        createdAt: { type: string, format: date-time }
+
+    BookInputForm:
+      type: object
+      required: [title, author, category_id]
+      properties:
+        title: { type: string }
+        author: { type: string }
+        price: { type: number, default: 0 }
+        stock: { type: integer, default: 0 }
+        category_id: { type: integer }
+        cover:
+          type: string
+          format: binary
+          description: รูปปก (png/jpg/webp/gif, ไม่เกิน 2 MB)
+
+    PagedBooks:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Book" }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+        totalPages: { type: integer }
