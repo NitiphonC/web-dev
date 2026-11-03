@@ -1,8 +1,17 @@
 /* =========================================================
-   Exam Playbook — quiz + navigation
+   Exam Playbook — quiz + navigation + checklist
+   ใช้ร่วมกันทุกหน้า (index / build / help / quiz)
    ========================================================= */
 
-/* ===================== 1. MCQ (20 ข้อ) ===================== */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+const escapeHtml = (str) =>
+  String(str ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+
+/* ===================== 1. MCQ (30 ข้อ) ===================== */
 const MCQ = [
   {
     q: "HTTP method ใดใช้ \"สร้าง\" ข้อมูลใหม่ และควรตอบกลับด้วย status code อะไร",
@@ -14,7 +23,7 @@ const MCQ = [
     q: "ถ้าลบข้อมูลสำเร็จและไม่ต้องส่ง body กลับ ควรใช้ status code ใด",
     opts: ["200 OK", "201 Created", "204 No Content", "205 Reset Content"],
     answer: 2,
-    why: "204 คือสำเร็จแต่ไม่มี response body — ใช้กับ DELETE (หรือ PUT ที่ไม่คืนข้อมูล) บ่อยที่สุด",
+    why: "204 คือสำเร็จแต่ไม่มี response body — ใช้กับ DELETE บ่อยที่สุด",
   },
   {
     q: "middleware ใดของ Express ที่จำเป็นสำหรับอ่าน JSON จาก req.body",
@@ -184,6 +193,103 @@ const MCQ = [
     answer: 1,
     why: "request เข้ามาเข้า middleware ก่อน (ตามลำดับที่ประกาศ) แล้วจึงถึง route handler ที่ตอบ response",
   },
+
+  /* ---- ข้อ 21–30: ออกตามสไลด์ในรายวิชา ---- */
+  {
+    q: "Node.js คืออะไร (ตามสไลด์)",
+    opts: [
+      "ภาษาโปรแกรมใหม่ที่ใช้แทน JavaScript",
+      "JavaScript Runtime Environment ที่ทำงานบน V8 Engine",
+      "ฐานข้อมูล NoSQL",
+      "เว็บเฟรมเวิร์กสำหรับตกแต่งหน้าเว็บ",
+    ],
+    answer: 1,
+    why: "Node.js ไม่ใช่ภาษาใหม่ แต่เป็นสภาพแวดล้อมที่นำ JavaScript ไปรันนอกเบราว์เซอร์ บน V8 Engine",
+  },
+  {
+    q: "งานแบบใดที่ Node.js ทำได้ดีที่สุด เพราะเป็น Asynchronous & Non-blocking",
+    opts: [
+      "งานคำนวณหนัก ๆ ที่ใช้ CPU 100% ต่อเนื่อง",
+      "งาน I/O-intensive เช่น chat, streaming, real-time dashboard",
+      "งานพิมพ์เอกสาร",
+      "งานเรนเดอร์วิดีโอ",
+    ],
+    answer: 1,
+    why: "สไลด์ระบุว่า Node.js เน้นประสิทธิภาพกับ I/O-intensive apps เพราะ Event Loop รับงานต่อเนื่องโดยไม่ต้องรอ",
+  },
+  {
+    q: "TypeScript สามารถรันบน Node.js ได้โดยตรงหรือไม่",
+    opts: [
+      "ได้เลย ไม่ต้องทำอะไร",
+      "ไม่ได้ ต้อง Transpile เป็น JavaScript ก่อน",
+      "ได้ แต่เฉพาะบน Windows",
+      "ได้เฉพาะในเบราว์เซอร์",
+    ],
+    answer: 1,
+    why: "TypeScript ไม่สามารถรันบน Browser หรือ Node.js ได้โดยตรง ต้องแปลง (Transpile) เป็น JavaScript มาตรฐานก่อน",
+  },
+  {
+    q: "ข้อใดคือจุดเด่นหลักของ GraphQL เมื่อเทียบกับ REST",
+    opts: [
+      "ใช้ endpoint เดียว (/graphql) และขอเฉพาะ field ที่ต้องการ",
+      "เร็วกว่าเพราะใช้ Protobuf",
+      "ไม่ต้องมี schema",
+      "ใช้ได้เฉพาะกับ MongoDB",
+    ],
+    answer: 0,
+    why: "GraphQL แก้ปัญหา over-fetching/under-fetching โดย client ระบุ field ที่ต้องการใน query เดียว",
+  },
+  {
+    q: "gRPC ใช้เทคโนโลยีใดเป็นหลัก",
+    opts: [
+      "HTTP/2 + Protocol Buffers (binary)",
+      "HTTP/1.1 + JSON",
+      "WebSocket + XML",
+      "FTP + CSV",
+    ],
+    answer: 0,
+    why: "gRPC ใช้ HTTP/2 และ Protocol Buffers ซึ่งเป็น binary ทำให้ payload เล็กและเร็วกว่า JSON มาก เหมาะกับ microservices",
+  },
+  {
+    q: "ข้อใดคือจุดเด่นที่สุดของ Fastify เมื่อเทียบกับ Express",
+    opts: [
+      "มี JSON Schema validation ในตัวและประสิทธิภาพสูง",
+      "ใช้ TypeScript ไม่ได้",
+      "ไม่มีระบบ routing",
+      "บังคับใช้ GraphQL",
+    ],
+    answer: 0,
+    why: "Fastify เน้น high-throughput และมี Ajv JSON Schema ใช้ validate request อัตโนมัติ (ผิด schema → 400 ก่อนถึง handler)",
+  },
+  {
+    q: "NestJS มีแนวคิดหลักคล้ายกับอะไร",
+    opts: ["Angular (module, DI, decorators)", "jQuery", "WordPress", "Bootstrap"],
+    answer: 0,
+    why: "NestJS ได้รับแรงบันดาลใจจาก Angular ใช้ module + dependency injection + decorators และเหมาะกับระบบองค์กร",
+  },
+  {
+    q: "หลังแก้ไฟล์ schema.prisma แล้ว ต้องรันคำสั่งใดเพื่อสร้างตารางจริง",
+    opts: ["npx prisma db push", "npm start", "node server.js", "npx prisma format"],
+    answer: 0,
+    why: "npx prisma db push จะ sync schema กับฐานข้อมูลและ generate client ให้พร้อมใช้",
+  },
+  {
+    q: "Error-handling middleware ของ Express ต้องมีพารามิเตอร์กี่ตัว",
+    opts: ["2 (req, res)", "3 (req, res, next)", "4 (err, req, res, next)", "5 (err, req, res, next, done)"],
+    answer: 2,
+    why: "Express แยก error handler ออกจาก middleware ปกติด้วยการมี 4 พารามิเตอร์ และต้องวางไว้หลัง route ทั้งหมด",
+  },
+  {
+    q: "Docker volume ใน docker-compose ใช้ทำอะไร",
+    opts: [
+      "map โฟลเดอร์เครื่อง host เข้า container เพื่อให้แก้โค้ดแล้วเห็นทันที",
+      "เพิ่มความเร็ว CPU",
+      "ติดตั้ง Node.js",
+      "เปลี่ยน image",
+    ],
+    answer: 0,
+    why: "volume ทำให้ไฟล์ใน container กับเครื่อง host เป็นชุดเดียวกัน — แก้โค้ดแล้วไม่ต้อง rebuild",
+  },
 ];
 
 /* ===================== 2. True / False (10 ข้อ) ===================== */
@@ -302,18 +408,14 @@ const PRACTICAL = [
 ];
 
 /* =========================================================
-   Render
+   Render quiz (เฉพาะหน้า quiz.html)
    ========================================================= */
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-
-const escapeHtml = (str) =>
-  String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
 const LETTERS = ["ก", "ข", "ค", "ง"];
 
 function renderMCQ() {
   const box = $("#mcq");
+  if (!box) return;
+
   box.innerHTML = MCQ.map(
     (item, i) => `
     <div class="q" data-q="${i}" data-type="mcq">
@@ -338,7 +440,9 @@ function renderMCQ() {
 }
 
 function renderTF() {
-  const box = $("#tf");
+  const box = $("#tf-box");
+  if (!box) return;
+
   box.innerHTML = TF.map(
     (item, i) => `
     <div class="q" data-q="${i}" data-type="tf">
@@ -362,18 +466,16 @@ function renderTF() {
 }
 
 function renderPractical() {
-  const box = $("#practical");
+  const box = $("#practical-box");
+  if (!box) return;
+
   box.innerHTML = PRACTICAL.map(
     (item) => `
     <div class="practical-q">
-      <div class="q-head">
-        <span>${escapeHtml(item.q)}</span>
-      </div>
+      <div class="q-head"><span>${escapeHtml(item.q)}</span></div>
       <details>
         <summary>ดูแนวคำตอบ / สิ่งที่ต้องมี</summary>
-        <ol>
-          ${item.points.map((p) => `<li>${p}</li>`).join("")}
-        </ol>
+        <ol>${item.points.map((p) => `<li>${p}</li>`).join("")}</ol>
       </details>
     </div>`
   ).join("");
@@ -386,9 +488,9 @@ function grade() {
   let correct = 0;
   const total = MCQ.length + TF.length;
 
-  // ---- MCQ ----
   MCQ.forEach((item, i) => {
     const q = $(`.q[data-type="mcq"][data-q="${i}"]`);
+    if (!q) return;
     const picked = $("input:checked", q);
     const explain = $(".q-explain", q);
 
@@ -407,9 +509,9 @@ function grade() {
     explain.textContent = (ok ? "✓ ถูกต้อง — " : "✗ ยังไม่ถูก — ") + item.why;
   });
 
-  // ---- TF ----
   TF.forEach((item, i) => {
     const q = $(`.q[data-type="tf"][data-q="${i}"]`);
+    if (!q) return;
     const picked = $("input:checked", q);
     const explain = $(".q-explain", q);
 
@@ -432,38 +534,39 @@ function grade() {
   });
 
   const scoreEl = $("#score");
+  if (!scoreEl) return;
   const pct = Math.round((correct / total) * 100);
   scoreEl.textContent = `ได้ ${correct}/${total} คะแนน (${pct}%)`;
   scoreEl.classList.toggle("good", pct >= 80);
   scoreEl.classList.toggle("bad", pct < 60);
-
-  // เลื่อนไปดูคะแนน
   scoreEl.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function reset() {
-  $$('#quiz input[type="radio"]').forEach((input) => (input.checked = false));
-  $$("#quiz .q-explain").forEach((p) => {
+  $$('#quiz input[type="radio"], #tf-box input[type="radio"]').forEach((i) => (i.checked = false));
+  $$(".q-explain").forEach((p) => {
     p.hidden = true;
     p.textContent = "";
     p.classList.remove("bad");
   });
-  $$("#quiz .opt").forEach((l) => l.classList.remove("is-correct", "is-wrong", "is-chosen"));
+  $$(".opt").forEach((l) => l.classList.remove("is-correct", "is-wrong", "is-chosen"));
 
   const scoreEl = $("#score");
+  if (!scoreEl) return;
   scoreEl.textContent = "";
   scoreEl.classList.remove("good", "bad");
 }
 
 /* =========================================================
-   Sidebar scroll spy
+   Sidebar scroll spy (ทุกหน้า)
    ========================================================= */
 function initScrollSpy() {
-  const links = $$(".side-nav a");
+  const links = $$('.side-nav a[href^="#"]');
+  if (!links.length) return;
+
   const map = new Map();
   links.forEach((a) => {
-    const id = a.getAttribute("href").slice(1);
-    const el = document.getElementById(id);
+    const el = document.getElementById(a.getAttribute("href").slice(1));
     if (el) map.set(el, a);
   });
 
@@ -475,10 +578,35 @@ function initScrollSpy() {
         map.get(entry.target)?.classList.add("is-active");
       });
     },
-    { rootMargin: "-15% 0px -70% 0px", threshold: 0 }
+    { rootMargin: "-10% 0px -75% 0px", threshold: 0 }
   );
 
   map.forEach((_, el) => obs.observe(el));
+}
+
+/* =========================================================
+   Checklist ที่จำค่าไว้ (index.html)
+   ========================================================= */
+const CHECK_KEY = "exam-playbook-checklist";
+
+function initChecklist() {
+  const boxes = $$("#checklist-items input[type=checkbox]");
+  if (!boxes.length) return;
+
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(CHECK_KEY) || "{}");
+  } catch {
+    saved = {};
+  }
+
+  boxes.forEach((box) => {
+    box.checked = !!saved[box.dataset.key];
+    box.addEventListener("change", () => {
+      saved[box.dataset.key] = box.checked;
+      localStorage.setItem(CHECK_KEY, JSON.stringify(saved));
+    });
+  });
 }
 
 /* =========================================================
@@ -488,14 +616,16 @@ renderMCQ();
 renderTF();
 renderPractical();
 initScrollSpy();
+initChecklist();
 
-$("#grade-btn").addEventListener("click", grade);
-$("#reset-btn").addEventListener("click", reset);
+$("#grade-btn")?.addEventListener("click", grade);
+$("#reset-btn")?.addEventListener("click", reset);
 
-// เลือกแล้วให้ไฮไลต์เบา ๆ
+// ไฮไลต์ตัวเลือกที่เพิ่งเลือก
 document.addEventListener("change", (e) => {
-  if (!e.target.matches('#quiz input[type="radio"]')) return;
+  if (!e.target.matches('input[type="radio"]')) return;
   const q = e.target.closest(".q");
+  if (!q) return;
   $$(".opt", q).forEach((l) => l.classList.remove("is-chosen"));
   e.target.closest(".opt")?.classList.add("is-chosen");
 });

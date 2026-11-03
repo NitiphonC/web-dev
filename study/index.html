@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>คู่มือสอบ — Web Engineering & Contemporary Technology</title>
+    <title>คู่มือสอบ — Web Engineering &amp; Contemporary Technology</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -13,29 +13,29 @@
         <span>🎯</span>
         <div><strong>Exam Playbook</strong><small>Web Contemporary</small></div>
       </div>
+
       <nav class="side-nav">
         <a href="#overview">ภาพรวมข้อสอบ</a>
-        <a href="#assignments">งานใน Classroom → ข้อสอบ</a>
+        <a href="#start">เริ่มอ่านตรงไหน</a>
+        <a href="#assignments">งานใน Classroom</a>
         <a href="#plan">แผนเวลา 4 ชั่วโมง</a>
         <a href="#checklist">Checklist ก่อนลงมือ</a>
-        <a href="#clone">1. Clone &amp; Run</a>
-        <a href="#schema">2. ออกแบบ 2 ตาราง</a>
-        <a href="#backend">3. Backend CRUD</a>
-        <a href="#upload">4. อัปโหลดไฟล์</a>
-        <a href="#frontend">5. Frontend JS</a>
-        <a href="#codegen">6. Gen จาก OpenAPI</a>
-        <a href="#cheatsheet">Cheat sheet</a>
-        <a href="#quiz">แนวข้อสอบ</a>
         <a href="#rules">กติกา / ความเสี่ยง</a>
       </nav>
-      <a class="side-back" href="http://localhost:3000/">← กลับไปตัวแอป</a>
+
+      <nav class="side-nav" style="margin-top: 6px; border-top: 1px solid var(--border); padding-top: 10px">
+        <a href="./build.html">📘 ลงมือทำทีละขั้น →</a>
+        <a href="./help.html">🧯 แก้ error / วิธีปรับโจทย์ →</a>
+        <a href="./quiz.html">📝 แนวข้อสอบ 45 ข้อ →</a>
+        <a href="http://localhost:3000/">← กลับไปตัวแอป</a>
+      </nav>
     </aside>
 
     <main class="main">
       <!-- ============ OVERVIEW ============ -->
       <section id="overview" class="hero">
         <span class="pill">สรุปจากงานที่ได้รับมอบหมาย + สไลด์ใน Classroom</span>
-        <h1>สอบปฎิบัติ Web Contemporary<br />ใน 4 ชั่วโมง</h1>
+        <h1>สอบปฏิบัติ Web Contemporary<br />ใน 4 ชั่วโมง</h1>
         <p class="lead">
           ข้อเขียน: clone repo แล้วทำ <strong>CRUD 2 ตารางใหญ่ + อัปโหลดไฟล์</strong> —
           โจทย์แนวเดียวกับงาน <em>Book Catalog API</em>, <em>api Book, Review</em> และ <em>next.js CRUD + upload</em>
@@ -68,6 +68,35 @@
               <li>ทุจริต = F ทุกวิชา</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <!-- ============ START ============ -->
+      <section id="start">
+        <h2>เริ่มอ่านตรงไหน</h2>
+        <p class="muted">อ่านตามลำดับนี้ ถ้ามีเวลาไม่พอให้ข้ามไป "ลงมือทำ" เลย</p>
+
+        <div class="page-links">
+          <a class="page-link" href="./build.html">
+            <span class="ico">📘</span>
+            <strong>ลงมือทำทีละขั้น</strong>
+            <span>ตั้งแต่เปิด terminal, clone, สร้าง 2 ตาราง, เขียน CRUD, อัปโหลดไฟล์ ไปจนถึง frontend — มีคอมเมนต์อธิบายทุกบรรทัดและบอกว่าควรเห็นผลลัพธ์อะไร</span>
+          </a>
+          <a class="page-link" href="./help.html">
+            <span class="ico">🧯</span>
+            <strong>แก้ error / ปรับโจทย์</strong>
+            <span>ตาราง error ที่เจอบ่อยพร้อมสาเหตุและวิธีแก้, ชิ้นส่วนไหนต้องจับคู่กับชิ้นส่วนไหน, เจอโจทย์แบบนี้ให้หยิบโค้ดส่วนไหนไปใช้</span>
+          </a>
+          <a class="page-link" href="./quiz.html">
+            <span class="ico">📝</span>
+            <strong>แนวข้อสอบ 45 ข้อ</strong>
+            <span>ปรนัย 30 + ถูกผิด 10 + ข้อเขียน 5 พร้อมเฉลยอธิบายทุกข้อ ตรวจคะแนนได้ทันที</span>
+          </a>
+        </div>
+
+        <div class="why">
+          <b>ถ้าเพิ่งเริ่มจากศูนย์:</b> อ่าน <a href="./build.html#basics">บท 0 พื้นฐาน terminal</a> ก่อน 20 นาที
+          แล้วค่อยไปบท 1 — ไม่ต้องเข้าใจทั้งหมด แค่ให้รันคำสั่งเป็นและรู้ว่าผลลัพธ์ผิดปกติหน้าตาเป็นอย่างไร
         </div>
       </section>
 
@@ -146,7 +175,7 @@
         </div>
 
         <p class="callout">
-          งาน <b>Book Catalog API</b> ไม่ต้องใช้ฐานข้อมูล (จำลอง array) แต่ข้อสอบปฎิบัติเน้น <b>2 ตาราง + upload</b>
+          งาน <b>Book Catalog API</b> ไม่ต้องใช้ฐานข้อมูล (จำลอง array) แต่ข้อสอบปฏิบัติเน้น <b>2 ตาราง + upload</b>
           → เอาโครง route จากงานนี้ แล้วเปลี่ยนที่เก็บข้อมูลเป็น SQLite หรือ Prisma
         </p>
       </section>
@@ -205,430 +234,16 @@
       <!-- ============ CHECKLIST ============ -->
       <section id="checklist">
         <h2>Checklist ก่อนลงมือ</h2>
-        <ul class="check">
-          <li><label><input type="checkbox" /> Node.js ≥ 22 (มี <code>node:sqlite</code> ในตัว)</label></li>
-          <li><label><input type="checkbox" /> เปิด terminal ไว้ 2 หน้า (server + คำสั่งอื่น)</label></li>
-          <li><label><input type="checkbox" /> ปิด/ถอน extension ที่เป็น AI ทั้งหมดก่อนเข้าห้องสอบ</label></li>
-          <li><label><input type="checkbox" /> เตรียม snippet ที่จะใช้ซ้ำ (หน้านี้มีให้ก็อป)</label></li>
-          <li><label><input type="checkbox" /> รู้ว่าอาจารย์ให้ HTML/CSS มาแค่ไหน — อย่าไปเขียนใหม่ทั้งหน้า</label></li>
-          <li><label><input type="checkbox" /> เปิด Swagger ของโจทย์ไว้ดู field ให้ตรง</label></li>
-          <li><label><input type="checkbox" /> ตั้งชื่อ DB/ไฟล์ให้ตรงกับที่โจทย์กำหนด</label></li>
+        <p class="muted">ติ๊กแล้วระบบจะจำไว้ในเครื่องคุณ</p>
+        <ul class="check" id="checklist-items">
+          <li><label><input type="checkbox" data-key="node" /> Node.js ≥ 22 (มี <code>node:sqlite</code> ในตัว) — เช็กด้วย <code>node -v</code></label></li>
+          <li><label><input type="checkbox" data-key="term" /> เปิด terminal ไว้ 2 หน้า (หน้า server + หน้าคำสั่งอื่น)</label></li>
+          <li><label><input type="checkbox" data-key="ext" /> ปิด/ถอน extension ที่เป็น AI ทั้งหมดก่อนเข้าห้องสอบ</label></li>
+          <li><label><input type="checkbox" data-key="snip" /> เตรียม snippet ที่จะใช้ซ้ำ (หน้านี้มีให้ก็อป)</label></li>
+          <li><label><input type="checkbox" data-key="html" /> รู้ว่าอาจารย์ให้ HTML/CSS มาแค่ไหน — อย่าไปเขียนใหม่ทั้งหน้า</label></li>
+          <li><label><input type="checkbox" data-key="swagger" /> เปิด Swagger ของโจทย์ไว้ดู field ให้ตรง</label></li>
+          <li><label><input type="checkbox" data-key="dbname" /> ตั้งชื่อ DB/ไฟล์ให้ตรงกับที่โจทย์กำหนด</label></li>
         </ul>
-      </section>
-
-      <!-- ============ CLONE ============ -->
-      <section id="clone">
-        <h2>1. Clone &amp; Run</h2>
-        <pre><code>git clone &lt;repo-url&gt; exam
-cd exam
-npm install
-
-# รันโหมด dev (รีสตาร์ทเองเมื่อแก้ไฟล์)
-npm run dev
-# เปิด http://localhost:3000</code></pre>
-
-        <p class="callout">
-          โปรเจกต์ตัวอย่างนี้ใช้ <code>node:sqlite</code> ที่มากับ Node 22.5+ — <strong>ไม่ต้องลงฐานข้อมูลเพิ่ม</strong>
-          ถ้าเครื่องสอบไม่มี ให้เปลี่ยนไปใช้ <code>better-sqlite3</code> หรือเก็บเป็น JSON ชั่วคราว
-        </p>
-
-        <h3>ถ้าโจทย์ให้ Docker มา</h3>
-        <pre><code>docker compose up --build
-# หรือ
-docker build -t exam-app .
-docker run -p 3000:3000 exam-app</code></pre>
-      </section>
-
-      <!-- ============ SCHEMA ============ -->
-      <section id="schema">
-        <h2>2. ออกแบบ 2 ตาราง</h2>
-        <p class="muted">เลือกโมเดลที่ "มีตารางลูก" ชัด ๆ เพื่อให้ได้ FK และได้คะแนนเรื่อง relation</p>
-
-        <div class="erd">
-          <div class="erd-box">
-            <h4>categories</h4>
-            <ul>
-              <li><b>id</b> PK</li>
-              <li>name</li>
-              <li>description</li>
-              <li>created_at</li>
-            </ul>
-          </div>
-          <div class="erd-arrow">1 ──── N</div>
-          <div class="erd-box">
-            <h4>books</h4>
-            <ul>
-              <li><b>id</b> PK</li>
-              <li>title</li>
-              <li>author</li>
-              <li>price, stock</li>
-              <li>cover_url</li>
-              <li><b>category_id</b> FK → categories.id</li>
-            </ul>
-          </div>
-        </div>
-
-        <pre><code>CREATE TABLE categories (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  name        TEXT    NOT NULL UNIQUE,
-  description TEXT    DEFAULT '',
-  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
-);
-
-CREATE TABLE books (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  title       TEXT    NOT NULL,
-  author      TEXT    NOT NULL,
-  price       REAL    NOT NULL DEFAULT 0,
-  stock       INTEGER NOT NULL DEFAULT 0,
-  cover_url   TEXT,
-  category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
-  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
-);
-
-PRAGMA foreign_keys = ON;</code></pre>
-
-        <h3>ตัวเลือกคู่ตารางอื่นที่เจอบ่อย</h3>
-        <table class="tbl">
-          <thead><tr><th>ตารางหลัก</th><th>ตารางลูก</th><th>ไฟล์ที่อัปโหลด</th></tr></thead>
-          <tbody>
-            <tr><td>books</td><td>categories / authors</td><td>รูปปก</td></tr>
-            <tr><td>products</td><td>categories / orders</td><td>รูปสินค้า</td></tr>
-            <tr><td>courses</td><td>lessons / enrollments</td><td>สลิป / เอกสาร</td></tr>
-            <tr><td>users</td><td>posts</td><td>avatar / แนบไฟล์</td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- ============ BACKEND ============ -->
-      <section id="backend">
-        <h2>3. Backend CRUD</h2>
-        <p class="muted">ทำตารางเดียวให้ครบก่อน แล้วก็อปไปแปลง — เร็วกว่าเขียนใหม่</p>
-
-        <h3>โครง Express ขั้นต่ำ</h3>
-        <pre><code>const express = require("express");
-const db = require("./db");
-const app = express();
-
-app.use(express.json());
-app.use(express.static("public"));
-
-// READ (list)
-app.get("/api/books", (req, res) =&gt; {
-  const rows = db.prepare(`
-    SELECT b.*, c.name AS category_name
-    FROM books b JOIN categories c ON c.id = b.category_id
-    ORDER BY b.id DESC`).all();
-  res.json({ data: rows, total: rows.length });
-});
-
-// READ (one)
-app.get("/api/books/:id", (req, res) =&gt; {
-  const row = db.prepare("SELECT * FROM books WHERE id = ?").get(req.params.id);
-  if (!row) return res.status(404).json({ message: "ไม่พบข้อมูล" });
-  res.json(row);
-});
-
-// CREATE
-app.post("/api/books", (req, res) =&gt; {
-  const { title, author, price = 0, stock = 0, category_id } = req.body;
-  if (!title) return res.status(400).json({ message: "ต้องระบุชื่อ" });
-
-  const info = db.prepare(
-    "INSERT INTO books (title, author, price, stock, category_id) VALUES (?,?,?,?,?)"
-  ).run(title, author, price, stock, category_id);
-
-  res.status(201).json({ id: Number(info.lastInsertRowid) });
-});
-
-// UPDATE
-app.put("/api/books/:id", (req, res) =&gt; {
-  const { title, author, price, stock, category_id } = req.body;
-  const info = db.prepare(
-    "UPDATE books SET title=?, author=?, price=?, stock=?, category_id=? WHERE id=?"
-  ).run(title, author, price, stock, category_id, req.params.id);
-
-  if (info.changes === 0) return res.status(404).json({ message: "ไม่พบข้อมูล" });
-  res.json({ ok: true });
-});
-
-// DELETE
-app.delete("/api/books/:id", (req, res) =&gt; {
-  const info = db.prepare("DELETE FROM books WHERE id = ?").run(req.params.id);
-  if (info.changes === 0) return res.status(404).json({ message: "ไม่พบข้อมูล" });
-  res.status(204).end();
-});
-
-app.listen(3000);</code></pre>
-
-        <div class="grid">
-          <div class="panel">
-            <h4>Status code ที่ควรใช้</h4>
-            <ul class="tight">
-              <li><code>200</code> อ่าน/แก้สำเร็จ</li>
-              <li><code>201</code> สร้างสำเร็จ</li>
-              <li><code>204</code> ลบสำเร็จ (ไม่มี body)</li>
-              <li><code>400</code> ข้อมูลไม่ถูกต้อง</li>
-              <li><code>404</code> ไม่พบ</li>
-              <li><code>409</code> ชนกัน (ชื่อซ้ำ / ลบไม่ได้)</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h4>กับดักที่เจอบ่อย</h4>
-            <ul class="tight">
-              <li>ลืม <code>express.json()</code> → <code>req.body</code> เป็น undefined</li>
-              <li>ลืม <code>await</code>/callback → ตอบก่อนบันทึกเสร็จ</li>
-              <li>id เป็น string จาก path → แปลงเป็น Number ก่อน</li>
-              <li>ลบ parent ที่มี child อยู่ → ต้องเช็กก่อน</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ UPLOAD ============ -->
-      <section id="upload">
-        <h2>4. อัปโหลดไฟล์</h2>
-        <p class="muted">ท่องให้ขึ้นใจ: <strong>multer.single("ชื่อ field")</strong> ต้องตรงกับ FormData ฝั่งหน้าเว็บ</p>
-
-        <h3>ฝั่ง server</h3>
-        <pre><code>const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-
-const UPLOAD_DIR = path.join(__dirname, "uploads");
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) =&gt; cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) =&gt; {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`);
-  },
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 2 * 1024 * 1024 },
-  fileFilter: (req, file, cb) =&gt; {
-    if (!file.mimetype.startsWith("image/")) return cb(new Error("ต้องเป็นรูปภาพ"));
-    cb(null, true);
-  },
-});
-
-// ให้เข้าถึงไฟล์ที่อัปโหลดได้
-app.use("/uploads", express.static(UPLOAD_DIR));
-
-// route ที่รับไฟล์
-app.post("/api/books", upload.single("cover"), (req, res) =&gt; {
-  const coverUrl = req.file ? `/uploads/${req.file.filename}` : null;
-  const info = db.prepare(
-    "INSERT INTO books (title, author, category_id, cover_url) VALUES (?,?,?,?)"
-  ).run(req.body.title, req.body.author, req.body.category_id, coverUrl);
-
-  res.status(201).json({ id: Number(info.lastInsertRowid), coverUrl });
-});</code></pre>
-
-        <h3>ฝั่งหน้าเว็บ</h3>
-        <pre><code>const formData = new FormData();
-formData.append("title", title);
-formData.append("author", author);
-formData.append("category_id", categoryId);
-formData.append("cover", fileInput.files[0]); // ต้องตรงชื่อ field
-
-const res = await fetch("/api/books", { method: "POST", body: formData });
-// ห้ามใส่ Content-Type เอง ให้ browser ใส่ boundary ให้
-
-const data = await res.json();</code></pre>
-
-        <div class="callout danger">
-          ข้อผิดพลาดยอดนิยม: ใส่ <code>headers: { "Content-Type": "multipart/form-data" }</code>
-          → server อ่านไฟล์ไม่ได้ เพราะขาด boundary
-        </div>
-      </section>
-
-      <!-- ============ FRONTEND ============ -->
-      <section id="frontend">
-        <h2>5. Frontend JS</h2>
-        <p class="muted">ถ้าอาจารย์ให้ HTML/CSS มาแล้ว เหลือแค่ 4 อย่างนี้</p>
-
-        <h3>render ตาราง</h3>
-        <pre><code>const tbody = document.querySelector("#books-body");
-
-function render(rows) {
-  tbody.innerHTML = rows.map(b =&gt; `
-    &lt;tr&gt;
-      &lt;td&gt;&lt;img src="${b.coverUrl || "/placeholder.png"}" width="46"&gt;&lt;/td&gt;
-      &lt;td&gt;${escapeHtml(b.title)}&lt;/td&gt;
-      &lt;td&gt;${escapeHtml(b.author)}&lt;/td&gt;
-      &lt;td&gt;${b.categoryName ?? ""}&lt;/td&gt;
-      &lt;td&gt;${b.price}&lt;/td&gt;
-      &lt;td&gt;
-        &lt;button data-edit="${b.id}"&gt;แก้ไข&lt;/button&gt;
-        &lt;button data-del="${b.id}"&gt;ลบ&lt;/button&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;`).join("");
-}</code></pre>
-
-        <h3>โหลด + ลบ (event delegation)</h3>
-        <pre><code>async function load() {
-  const res = await fetch("/api/books");
-  const { data } = await res.json();
-  render(data);
-}
-load();
-
-document.addEventListener("click", async (e) =&gt; {
-  const id = e.target.dataset.del;
-  if (!id) return;
-  if (!confirm("ลบเลยไหม?")) return;
-
-  await fetch(`/api/books/${id}`, { method: "DELETE" });
-  load();
-});</code></pre>
-
-        <h3>ฟอร์ม + ไฟล์</h3>
-        <pre><code>form.addEventListener("submit", async (e) =&gt; {
-  e.preventDefault();
-  const fd = new FormData(form);
-
-  const res = await fetch("/api/books", { method: "POST", body: fd });
-  if (!res.ok) {
-    const err = await res.json();
-    alert(err.message);
-    return;
-  }
-  form.reset();
-  load();
-});</code></pre>
-
-        <div class="callout">
-          อย่าลืม <code>escapeHtml()</code> ก่อนยัดค่าลง innerHTML — กัน XSS และกันหน้าพังเมื่อมีอักขระพิเศษ
-        </div>
-      </section>
-
-      <!-- ============ CODEGEN ============ -->
-      <section id="codegen">
-        <h2>6. Gen โค้ดจาก OpenAPI / Postman</h2>
-        <p class="muted">ถ้าอาจารย์ให้ <code>swagger.yaml/json</code> มา อย่าเริ่มจากศูนย์</p>
-
-        <h3>วิธี A — openapi-generator (เร็วกว่าเขียนเอง)</h3>
-        <pre><code># ครั้งเดียว ไม่ต้องติดตั้ง global
-npx @openapitools/openapi-generator-cli generate \
-  -i openapi.yaml \
-  -g nodejs-express-server \
-  -o generated
-
-# ตัวเลือก generator ที่ใช้บ่อย
-#   nodejs-express-server  → Express + service stubs
-#   javascript             → fetch client
-#   typescript-fetch       → client + type
-#   html2                  → เอกสาร API</code></pre>
-
-        <p>จากนั้นแก้เฉพาะไฟล์ service ใน <code>generated/services/</code> ให้ต่อ DB — routing/validation ได้มาฟรี</p>
-
-        <h3>วิธี B — Postman</h3>
-        <ol class="tight-list">
-          <li>Import <code>openapi.yaml</code> (หรือ swagger URL) เข้า Postman → ได้ collection ครบทุก endpoint</li>
-          <li>ยิงทดสอบทีละตัวเพื่อดู response จริง</li>
-          <li>กด <b>Code snippet</b> (ขวาบน) เลือก Node → Axios / fetch ได้โค้ดเรียก API ไปใช้ต่อ</li>
-        </ol>
-
-        <h3>วิธี C — อ่าน spec แล้วเขียนเอง (ชัวร์สุดถ้าเวลาน้อย)</h3>
-        <ul class="tight-list">
-          <li>ดู <code>paths</code> → ได้รายการ endpoint + method</li>
-          <li>ดู <code>components.schemas</code> → ได้ชื่อ field + type (เอาไปสร้างตาราง)</li>
-          <li>ดู <code>requestBody</code> ว่าเป็น <code>multipart/form-data</code> ไหม → รู้ว่าต้องใช้ multer</li>
-        </ul>
-
-        <pre><code># ตรวจ spec ว่าถูกต้องก่อน gen
-npx @redocly/cli lint openapi.yaml
-
-# เปิดเอกสารสวย ๆ ให้เพื่อนดู
-npx @redocly/cli preview-docs openapi.yaml</code></pre>
-      </section>
-
-      <!-- ============ CHEATSHEET ============ -->
-      <section id="cheatsheet">
-        <h2>Cheat sheet</h2>
-
-        <div class="cheat-grid">
-          <div class="cheat">
-            <h4>คำสั่งที่ใช้บ่อย</h4>
-            <pre><code>npm init -y
-npm i express multer
-node --watch server.js
-npx nodemon server.js
-
-curl http://localhost:3000/api/books
-curl -X POST http://localhost:3000/api/books \
-  -H "Content-Type: application/json" \
-  -d '{"title":"A","author":"B","category_id":1}'</code></pre>
-          </div>
-
-          <div class="cheat">
-            <h4>SQL ที่ต้องเป๊ะ</h4>
-            <pre><code>SELECT * FROM books WHERE title LIKE ?;
-INSERT INTO books (a,b) VALUES (?,?);
-UPDATE books SET a=? WHERE id=?;
-DELETE FROM books WHERE id=?;
-SELECT COUNT(*) AS c FROM books;</code></pre>
-          </div>
-
-          <div class="cheat">
-            <h4>fetch 4 แบบ</h4>
-            <pre><code>// GET
-await fetch("/api/books").then(r =&gt; r.json());
-
-// POST json
-fetch("/api/books", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
-});
-
-// POST file
-fetch("/api/books", { method: "POST", body: formData });
-
-// DELETE
-fetch(`/api/books/${id}`, { method: "DELETE" });</code></pre>
-          </div>
-
-          <div class="cheat">
-            <h4>ดีบักเร็ว ๆ</h4>
-            <pre><code>console.log(req.body, req.file);
-// เปิด Network tab ดู status + payload
-// ถ้า 404: path ผิด / static ไม่ถูกเสิร์ฟ
-// ถ้า 500: ดู stack ใน terminal
-// ถ้า body ว่าง: ลืม express.json()</code></pre>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ QUIZ ============ -->
-      <section id="quiz">
-        <h2>แนวข้อสอบ</h2>
-        <p class="muted">ทำแล้วกดตรวจคะแนน — ใช้ทบทวนก่อนสอบ</p>
-
-        <div class="quiz-block">
-          <h3>ตอนที่ 1 — ปรนัย 20 ข้อ</h3>
-          <div id="mcq"></div>
-        </div>
-
-        <div class="quiz-block">
-          <h3>ตอนที่ 2 — ถูก / ผิด 10 ข้อ</h3>
-          <div id="tf"></div>
-        </div>
-
-        <div class="quiz-block">
-          <h3>ตอนที่ 3 — ข้อเขียน / ลงมือทำ</h3>
-          <div id="practical"></div>
-        </div>
-
-        <div class="quiz-actions">
-          <button class="btn btn-primary" id="grade-btn">ตรวจคำตอบ</button>
-          <button class="btn" id="reset-btn">ล้างคำตอบ</button>
-          <span id="score" class="score"></span>
-        </div>
       </section>
 
       <!-- ============ RULES ============ -->
@@ -652,7 +267,7 @@ fetch(`/api/books/${id}`, { method: "DELETE" });</code></pre>
           <li>ลบ <code>public/app.js</code> แล้วเขียนใหม่จาก cheat sheet ให้ได้ใน 30 นาที</li>
           <li>จำสูตร multer + FormData ให้ขึ้นใจ</li>
           <li>ลอง <code>npx @openapitools/openapi-generator-cli generate</code> กับ <code>openapi.yaml</code> ในโปรเจกต์นี้</li>
-          <li>ซ้อมข้อกา 30 ข้อด้านบนให้ได้ ≥ 80%</li>
+          <li>ซ้อมข้อกา 45 ข้อในหน้า <a href="./quiz.html">แนวข้อสอบ</a> ให้ได้ ≥ 80%</li>
         </ol>
       </section>
     </main>

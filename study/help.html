@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>แก้ error &amp; ปรับโจทย์ — Exam Playbook</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧯</text></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="side">
+      <div class="side-brand">
+        <span>🧯</span>
+        <div><strong>แก้ error / ปรับโจทย์</strong><small>เวลาสอบมีจำกัด</small></div>
+      </div>
+
+      <nav class="side-nav">
+        <a href="./index.html">← ภาพรวมข้อสอบ</a>
+        <a href="#howto">อ่าน error ให้เป็น</a>
+        <a href="#errors">รวม error ที่เจอบ่อย</a>
+        <a href="#http">ตาราง HTTP status</a>
+        <a href="#wiring">ชิ้นส่วนที่ต้องจับคู่</a>
+        <a href="#adapt">เจอโจทย์แบบนี้ หยิบอะไร</a>
+        <a href="#final">ตรวจงานก่อนส่ง</a>
+      </nav>
+
+      <nav class="side-nav" style="margin-top: 6px; border-top: 1px solid var(--border); padding-top: 10px">
+        <a href="./build.html">📘 ลงมือทำทีละขั้น</a>
+        <a href="./quiz.html">📝 แนวข้อสอบ</a>
+        <a href="http://localhost:3000/">← ตัวแอป</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-crumb">
+        <a href="./index.html">หน้าหลัก</a><span>/</span><b>แก้ error / ปรับโจทย์</b>
+      </div>
+
+      <h1 style="margin: 0 0 8px; font-size: 30px; letter-spacing: -0.02em">แก้ error &amp; ปรับโจทย์</h1>
+      <p class="lead" style="margin-top: 0">
+        เวลาสอบ 4 ชั่วโมง ไม่มีเวลาไล่อ่านทุกบรรทัด — หน้านี้จะสอน<b>อ่าน error ให้เร็ว</b>,
+        รู้ว่า<b>ชิ้นส่วนไหนต้องทำงานคู่กัน</b> และ<b>เจอโจทย์แบบไหนให้หยิบอะไรไปใช้</b>
+      </p>
+
+      <!-- ============================================================
+           HOW TO READ ERRORS
+      ============================================================ -->
+      <section id="howto">
+        <h2>อ่าน error ให้เป็น (3 ชั้น)</h2>
+        <p class="muted">error จะโผล่ที่ใดที่หนึ่งใน 3 ที่นี้ — รู้ว่าดูที่ไหน = แก้เร็วขึ้นครึ่ง</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Terminal ที่รัน server</h4>
+            <p>error ฝั่ง backend ทั้งหมดจะอยู่ที่นี่ — <b>stack trace</b> อ่านจากบนลงล่าง:</p>
+            <div class="term">
+              <span class="bad">TypeError: Cannot read properties of undefined (reading 'filename')</span>
+              <span class="out">    at D:\exam\server.js:42:25</span>
+              <span class="out">    at Layer.handle [as handle_request] (...)</span>
+            </div>
+            <div class="why">
+              <b>อ่านแบบนี้:</b> บรรทัดแรก = อาการ, บรรทัดที่มี path ของเรา (<code>server.js:42</code>) = จุดที่พัง
+              — บรรทัดที่เหลือเป็นของไลบรารี ไม่ต้องอ่าน
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Browser Console (F12 → Console)</h4>
+            <p>error ฝั่ง frontend, JS พัง, fetch ล้มเหลว จะอยู่ที่นี่</p>
+            <div class="why">
+              <b>เปิดยังไง:</b> กด <span class="kbd">F12</span> หรือคลิกขวา → Inspect → แท็บ Console
+              <br />สีแดง = error, สีเหลือง = warning (มักไม่ทำให้พัง)
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Network tab (F12 → Network)</h4>
+            <p>ใช้เมื่อ "หน้าเว็บขึ้นแต่ข้อมูลไม่มา" — ดูว่า request ที่ยิงไปได้ status อะไร</p>
+            <table class="tbl">
+              <thead><tr><th>เห็นอะไร</th><th>หมายถึง</th></tr></thead>
+              <tbody>
+                <tr><td>status 200 แต่ตารางว่าง</td><td>ข้อมูลมาถูก แต่ JS render ผิด (ดู Console)</td></tr>
+                <tr><td>status 404</td><td>path ผิด หรือ route ยังไม่ถูกประกาศ</td></tr>
+                <tr><td>status 400</td><td>ข้อมูลที่ส่งไปไม่ครบ/ผิดรูปแบบ</td></tr>
+                <tr><td>status 500</td><td>server พัง → ไปดู terminal</td></tr>
+                <tr><td>(failed) net::ERR_CONNECTION_REFUSED</td><td>server ไม่ได้รัน / พอร์ตผิด</td></tr>
+                <tr><td>CORS error</td><td>คนละ origin → ต้องเพิ่ม <code>cors()</code> ที่ backend</td></tr>
+              </tbody>
+            </table>
+            <div class="why">
+              <b>เทคนิค:</b> คลิกที่ request → แท็บ <b>Payload</b> ดูว่าส่งอะไรไป และ <b>Response</b> ดูว่ากลับมาอะไร
+              — 90% ของบั๊ก API อยู่สองแท็บนี้
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <b>ลำดับการไล่บั๊กที่เร็วที่สุด:</b> ① Console มี error แดงไหม → ② Network status อะไร → ③ ถ้า 500 ให้ไปดู terminal
+          → ④ ถ้า 200 แต่ไม่แสดงผล ให้ <code>console.log(data)</code> ดูว่าข้อมูลหน้าตาเป็นอย่างไร
+        </div>
+
+        <h3>เห็นอาการแบบนี้ → เปิดไฟล์นี้ก่อน</h3>
+        <p class="muted">ตารางนี้ใช้ตอน \"output ออกมาผิด\" — ไล่จากอาการไปหาบรรทัดที่ต้องแก้</p>
+        <table class="tbl">
+          <thead>
+            <tr><th style="width: 32%">อาการที่เห็น</th><th style="width: 26%">เปิดดูที่</th><th>สาเหตุที่พบบ่อย</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>เปิด <code>localhost:3000</code> แล้วขึ้น ERR_CONNECTION_REFUSED</td>
+              <td>terminal ที่รัน server</td>
+              <td>server ดับไปแล้ว / ยังไม่รัน / พอร์ตไม่ใช่ 3000</td>
+            </tr>
+            <tr>
+              <td>หน้าเว็บขึ้นแต่ไม่มีสี ไม่มีสไตล์</td>
+              <td><code>server.js</code> บรรทัด <code>express.static(...public)</code></td>
+              <td>path ชี้ผิดโฟลเดอร์ หรือชื่อไฟล์ CSS ไม่ตรง</td>
+            </tr>
+            <tr>
+              <td>ตารางขึ้นแต่ไม่มีข้อมูล (ว่างเปล่า)</td>
+              <td><code>public/app.js</code> ฟังก์ชันโหลด + แท็บ Network</td>
+              <td>fetch path ผิด, field ที่อ่านไม่ตรงชื่อ, ลืม <code>await</code></td>
+            </tr>
+            <tr>
+              <td>กดปุ่ม \"บันทึก\" แล้วเงียบ ไม่มีอะไรเกิดขึ้น</td>
+              <td><code>public/app.js</code> ส่วน <code>addEventListener(\"submit\")</code></td>
+              <td>id ฟอร์มไม่ตรง, ลืม <code>e.preventDefault()</code>, ปุ่มอยู่นอก form</td>
+            </tr>
+            <tr>
+              <td>กดบันทึกแล้วได้ 400</td>
+              <td><code>server.js</code> route POST (ส่วน validate)</td>
+              <td>ส่ง field ไม่ครบ / ชื่อ field ไม่ตรง / ค่าว่าง</td>
+            </tr>
+            <tr>
+              <td>กดบันทึกแล้วได้ 500</td>
+              <td>terminal (stack trace) + route นั้นใน <code>server.js</code></td>
+              <td>SQL ผิด, คอลัมน์ไม่มีจริง, แปลง type ผิด</td>
+            </tr>
+            <tr>
+              <td>อัปโหลดแล้วรูปเป็น broken image</td>
+              <td><code>server.js</code> (<code>/uploads</code> static) + ค่า <code>cover_url</code></td>
+              <td>ไม่ได้เสิร์ฟโฟลเดอร์ uploads / เก็บ path ผิด / field ไม่ตรง</td>
+            </tr>
+            <tr>
+              <td>ลบหมวดหมู่แล้วได้ 409</td>
+              <td><code>server.js</code> route DELETE categories</td>
+              <td>ยังมีหนังสืออยู่ในหมวดนั้น (FK บล็อกไว้) — ถูกต้องแล้ว</td>
+            </tr>
+            <tr>
+              <td>รีสตาร์ท server แล้วข้อมูลหายหมด</td>
+              <td><code>db.js</code> ค่า <code>DB_PATH</code></td>
+              <td>ใช้ <code>:memory:</code> หรือเขียน DB คนละไฟล์ทุกครั้ง</td>
+            </tr>
+            <tr>
+              <td>แก้โค้ดแล้วผลไม่เปลี่ยน</td>
+              <td>terminal ที่รัน server</td>
+              <td>ยังไม่รีสตาร์ท — ใช้ <code>node --watch server.js</code> หรือกด Ctrl+C แล้วรันใหม่</td>
+            </tr>
+            <tr>
+              <td>เปิด <code>/api/books</code> แล้วได้ HTML กลับมา</td>
+              <td><code>server.js</code> ลำดับ route + ตัวดัก 404</td>
+              <td>path ผิด / ถูก static handler ตอบก่อน / route ยังไม่ถูกประกาศ</td>
+            </tr>
+            <tr>
+              <td>แก้ข้อมูลแล้วค่ากลับเป็นค่าเดิม</td>
+              <td><code>server.js</code> route PUT</td>
+              <td>ลืมส่ง field ใน UPDATE / ใช้ <code>req.body</code> ที่ว่างเพราะไม่มี multer หรือ json</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ============================================================
+           ERROR DICTIONARY
+      ============================================================ -->
+      <section id="errors">
+        <h2>รวม error ที่เจอบ่อย</h2>
+        <p class="muted">เจอข้อความคล้าย ๆ นี้ให้กระโดดมาที่การ์ดนั้น</p>
+
+        <h3>A. error ใน terminal</h3>
+
+        <div class="err-card">
+          <span class="sym">'node' is not recognized as an internal or external command</span>
+          <p class="row"><b>สาเหตุ</b> ยังไม่ได้ติดตั้ง Node.js หรือติดตั้งแล้วแต่ยังไม่รีสตาร์ท terminal</p>
+          <p class="row"><b>แก้</b> ติดตั้ง Node LTS จาก nodejs.org → ปิด terminal เปิดใหม่ → <code>node -v</code></p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">Error: ENOENT: no such file or directory, open 'package.json'</span>
+          <p class="row"><b>สาเหตุ</b> รัน <code>npm</code> ในโฟลเดอร์ที่ไม่มี <code>package.json</code></p>
+          <p class="row"><b>แก้</b> <code>pwd</code> ดูว่าอยู่ไหน → <code>cd</code> เข้าโฟลเดอร์โปรเจกต์ (ที่เห็น <code>package.json</code>)</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">Error: Cannot find module 'express'</span>
+          <p class="row"><b>สาเหตุ</b> ยังไม่ <code>npm install</code> หรืออยู่ผิดโฟลเดอร์</p>
+          <p class="row"><b>แก้</b> รัน <code>npm install</code> ในโฟลเดอร์ที่มี <code>package.json</code> แล้วรันใหม่</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">Error: Cannot find module './db'</span>
+          <p class="row"><b>สาเหตุ</b> <code>require("./db")</code> แล้วไม่มีไฟล์ <code>db.js</code> ข้าง ๆ หรือชื่อผิด</p>
+          <p class="row"><b>แก้</b> เช็กชื่อไฟล์ (ตัวพิมพ์เล็ก/ใหญ่สำคัญ) และว่า <code>db.js</code> อยู่โฟลเดอร์เดียวกับ <code>server.js</code></p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">Error: listen EADDRINUSE: address already in use :::3000</span>
+          <p class="row"><b>สาเหตุ</b> มีโปรแกรมอื่นใช้พอร์ต 3000 อยู่ (มักเป็น server เก่าที่ไม่ได้ปิด)</p>
+          <p class="row"><b>แก้</b> ไปที่ terminal ของ server เก่าแล้วกด <span class="kbd">Ctrl</span>+<span class="kbd">C</span> หรือรันพอร์ตใหม่ <code>set PORT=3001 &amp;&amp; npm start</code></p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">SyntaxError: Unexpected token '}' / Unexpected end of input</span>
+          <p class="row"><b>สาเหตุ</b> วงเล็บปีกกา/วงเล็บกลม/backtick ไม่ครบคู่</p>
+          <p class="row"><b>แก้</b> ดูเลขบรรทัดที่ error บอก — มักพัง<b>ก่อนหน้า</b>บรรทัดนั้น 1–2 บรรทัด ให้ไล่วงเล็บในฟังก์ชันนั้น</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">SqliteError: no such table: books</span>
+          <p class="row"><b>สาเหตุ</b> ยังไม่ได้สร้างตาราง หรือเปิดคนละไฟล์ DB</p>
+          <p class="row"><b>แก้</b> รันสคริปต์สร้าง DB ก่อน (<code>node db.js</code>) และเช็กว่า <code>DB_PATH</code> ชี้ไฟล์เดียวกันทุกครั้ง</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">SqliteError: FOREIGN KEY constraint failed</span>
+          <p class="row"><b>สาเหตุ</b> ใส่ <code>category_id</code> ที่ไม่มีอยู่ในตาราง <code>categories</code> หรือพยายามลบหมวดที่ยังมีหนังสือ</p>
+          <p class="row"><b>แก้</b> ตรวจว่า id ที่ส่งมามีจริง (ยิง GET ดู) — ถ้าเป็นการลบ ให้ลบหนังสือในหมวดนั้นก่อน</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">TypeError: Cannot read properties of undefined (reading 'filename')</span>
+          <p class="row"><b>สาเหตุ</b> <code>req.file</code> เป็น <code>undefined</code> — ไม่มีไฟล์ส่งมา หรือชื่อ field ไม่ตรง</p>
+          <p class="row"><b>แก้</b> เทียบ <code>upload.single("cover")</code> กับ <code>fd.append("cover", file)</code> ให้ตรงกัน และอย่าลืม <code>enctype</code> ถ้าใช้ form ปกติ</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">MulterError: Unexpected field</span>
+          <p class="row"><b>สาเหตุ</b> client ส่ง field ชื่อหนึ่ง แต่ server ตั้ง <code>upload.single("อีกชื่อ")</code></p>
+          <p class="row"><b>แก้</b> ทำชื่อให้ตรงกันทั้งสองฝั่ง (เช่น <code>cover</code> ทั้งคู่)</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">MulterError: File too large</span>
+          <p class="row"><b>สาเหตุ</b> ไฟล์ใหญ่กว่า <code>limits.fileSize</code></p>
+          <p class="row"><b>แก้</b> เพิ่ม limit หรือบีบรูปก่อนอัปโหลด (แต่ระวังหน่วยเป็น byte)</p>
+        </div>
+
+        <h3>B. error ใน browser</h3>
+
+        <div class="err-card">
+          <span class="sym">TypeError: Failed to fetch</span>
+          <p class="row"><b>สาเหตุ</b> server ไม่ได้รัน, URL ผิด, หรือเรียกข้าม origin แล้วติด CORS</p>
+          <p class="row"><b>แก้</b> เปิด <code>http://localhost:3000/api/books</code> ตรง ๆ ก่อน — ถ้าเปิดได้แต่ fetch ไม่ได้ แปลว่า path/port ผิด</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">Uncaught (in promise) SyntaxError: Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON</span>
+          <p class="row"><b>สาเหตุ</b> <code>res.json()</code> แต่ server ตอบ HTML (มักเป็นหน้า 404) กลับมา</p>
+          <p class="row"><b>แก้</b> path ของ API ผิด หรือ server ยังไม่มี route นั้น → ดู Network ว่า status เป็น 404 ไหม</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">TypeError: Cannot read properties of null (reading 'addEventListener')</span>
+          <p class="row"><b>สาเหตุ</b> <code>document.querySelector("#...")</code> หา element ไม่เจอ (id ไม่ตรง หรือ script ถูกโหลดก่อน HTML)</p>
+          <p class="row"><b>แก้</b> ตรวจ id ใน HTML ให้ตรงกับ JS และวาง <code>&lt;script&gt;</code> ไว้ท้าย <code>&lt;body&gt;</code> หรือใช้ <code>DOMContentLoaded</code></p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">กด Submit แล้วหน้าเว็บรีโหลด/ค่าหาย</span>
+          <p class="row"><b>สาเหตุ</b> ลืม <code>e.preventDefault()</code> ใน submit handler</p>
+          <p class="row"><b>แก้</b> ใส่เป็นบรรทัดแรกของ handler</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">รูปที่อัปโหลดขึ้นเป็น broken image (404)</span>
+          <p class="row"><b>สาเหตุ</b> ไม่ได้ประกาศ <code>express.static(UPLOAD_DIR)</code> หรือเก็บ path ผิด</p>
+          <p class="row"><b>แก้</b> เพิ่ม <code>app.use("/uploads", express.static(UPLOAD_DIR))</code> และเก็บค่าเป็น <code>/uploads/ชื่อไฟล์</code></p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">ตารางไม่รีเฟรชหลังเพิ่ม/ลบ</span>
+          <p class="row"><b>สาเหตุ</b> ไม่ได้เรียกฟังก์ชันโหลดใหม่หลัง API สำเร็จ</p>
+          <p class="row"><b>แก้</b> <code>await loadBooks()</code> หลัง <code>await request(...)</code> ทุกครั้ง</p>
+        </div>
+
+        <div class="err-card">
+          <span class="sym">req.body เป็น undefined (ฝั่ง server)</span>
+          <p class="row"><b>สาเหตุ</b> ลืม <code>app.use(express.json())</code> หรือ client ไม่ได้ส่ง <code>Content-Type: application/json</code></p>
+          <p class="row"><b>แก้</b> ประกาศ middleware ก่อน route และเช็ก header ใน Network tab</p>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           HTTP
+      ============================================================ -->
+      <section id="http">
+        <h2>ตาราง HTTP status</h2>
+        <table class="tbl">
+          <thead><tr><th style="width: 90px">Code</th><th>ความหมาย</th><th>สาเหตุที่พบบ่อย</th></tr></thead>
+          <tbody>
+            <tr><td><b>200</b></td><td>OK</td><td>อ่าน/แก้ไขสำเร็จ</td></tr>
+            <tr><td><b>201</b></td><td>Created</td><td>สร้างสำเร็จ (ควรตอบหลัง POST)</td></tr>
+            <tr><td><b>204</b></td><td>No Content</td><td>ลบสำเร็จ — ห้ามมี body</td></tr>
+            <tr><td><b>301</b></td><td>Moved Permanently</td><td>URL เก่าถูกย้ายถาวร (เช่น redirect หลังเปลี่ยนโดเมน)</td></tr>
+            <tr><td><b>304</b></td><td>Not Modified</td><td>ข้อมูลไม่เปลี่ยน — ให้เบราว์เซอร์ใช้ cache เดิม</td></tr>
+            <tr><td><b>400</b></td><td>Bad Request</td><td>validate ไม่ผ่าน, field หาย, ไฟล์ผิดชนิด</td></tr>
+            <tr><td><b>401</b></td><td>Unauthorized</td><td>ยังไม่ล็อกอิน / token หาย</td></tr>
+            <tr><td><b>403</b></td><td>Forbidden</td><td>ล็อกอินแล้วแต่ไม่มีสิทธิ์</td></tr>
+            <tr><td><b>404</b></td><td>Not Found</td><td>path ผิด หรือ id ไม่มีใน DB</td></tr>
+            <tr><td><b>409</b></td><td>Conflict</td><td>ชื่อซ้ำ (UNIQUE) หรือลบ parent ที่มี child</td></tr>
+            <tr><td><b>429</b></td><td>Too Many Requests</td><td>ยิงถี่เกิน rate limit</td></tr>
+            <tr><td><b>500</b></td><td>Internal Server Error</td><td>โค้ดพัง — ดู stack ใน terminal</td></tr>
+            <tr><td><b>502</b></td><td>Bad Gateway</td><td>proxy/gateway ติดต่อ backend ไม่ได้</td></tr>
+            <tr><td><b>503</b></td><td>Service Unavailable</td><td>server กำลัง restart / รับงานเกิน</td></tr>
+            <tr><td><b>504</b></td><td>Gateway Timeout</td><td>backend ตอบช้าเกินกำหนด</td></tr>
+          </tbody>
+        </table>
+
+        <div class="why">
+          <b>กฎที่อาจารย์ชอบถาม:</b> POST สำเร็จ = <b>201</b>, DELETE สำเร็จ = <b>204</b>, หา id ไม่เจอ = <b>404</b>,
+          ข้อมูลผิด = <b>400</b> — สี่ตัวนี้พอสำหรับข้อสอบปฏิบัติ
+          <br />
+          <b>Idempotency (ออกข้อกาบ่อย):</b> <code>GET</code>, <code>PUT</code>, <code>DELETE</code> เป็น idempotent
+          (เรียกซ้ำผลลัพธ์เหมือนเดิม) ส่วน <code>POST</code> และ <code>PATCH</code> ไม่ idempotent
+        </div>
+      </section>
+
+      <!-- ============================================================
+           WIRING
+      ============================================================ -->
+      <section id="wiring">
+        <h2>ชิ้นส่วนที่ต้องจับคู่กัน</h2>
+        <p class="muted">บั๊กส่วนใหญ่ไม่ได้เกิดจาก "โค้ดผิด" แต่เกิดจาก "สองฝั่งไม่ตรงกัน"</p>
+
+        <table class="tbl wiring">
+          <thead>
+            <tr><th style="width: 30%">ฝั่ง A</th><th style="width: 30%">ต้องตรงกับ</th><th>ถ้าไม่ตรงจะเกิดอะไร</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>upload.single("cover")</code></td>
+              <td><code>fd.append("cover", file)</code></td>
+              <td><code>req.file</code> เป็น undefined / <code>Unexpected field</code></td>
+            </tr>
+            <tr>
+              <td><code>express.json()</code></td>
+              <td><code>Content-Type: application/json</code></td>
+              <td><code>req.body</code> เป็น undefined</td>
+            </tr>
+            <tr>
+              <td><code>app.use("/uploads", static(...))</code></td>
+              <td>ค่า <code>cover_url = "/uploads/..."</code></td>
+              <td>รูป 404 / broken image</td>
+            </tr>
+            <tr>
+              <td><code>&lt;tbody id="books-body"&gt;</code></td>
+              <td><code>querySelector("#books-body")</code></td>
+              <td><code>Cannot read properties of null</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;form id="book-form"&gt;</code></td>
+              <td><code>addEventListener("submit")</code></td>
+              <td>กดบันทึกแล้วไม่มีอะไรเกิดขึ้น</td>
+            </tr>
+            <tr>
+              <td><code>books.category_id</code></td>
+              <td><code>categories.id</code></td>
+              <td><code>FOREIGN KEY constraint failed</code></td>
+            </tr>
+            <tr>
+              <td><code>PRAGMA foreign_keys = ON</code></td>
+              <td>การมี FK ในตาราง</td>
+              <td>FK ไม่ถูกบังคับ ข้อมูลเสียแบบเงียบ ๆ</td>
+            </tr>
+            <tr>
+              <td><code>res.status(204).end()</code></td>
+              <td>frontend เช็ก <code>if (res.status === 204)</code></td>
+              <td>พยายาม <code>res.json()</code> แล้วพัง</td>
+            </tr>
+            <tr>
+              <td>คอลัมน์ DB <code>cover_url</code></td>
+              <td>field API <code>coverUrl</code></td>
+              <td>ค่าเป็น undefined (ชื่อไม่ตรงกัน)</td>
+            </tr>
+            <tr>
+              <td><code>Number(info.lastInsertRowid)</code></td>
+              <td>การส่ง id กลับใน JSON</td>
+              <td><code>TypeError: Do not know how to serialize a BigInt</code></td>
+            </tr>
+            <tr>
+              <td><code>app.listen(3000)</code></td>
+              <td>URL ที่เปิดในเบราว์เซอร์</td>
+              <td><code>ERR_CONNECTION_REFUSED</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;script src="/app.js"&gt;</code></td>
+              <td>ไฟล์ใน <code>public/app.js</code></td>
+              <td>JS ไม่ถูกโหลด (404) — ปุ่มไม่ทำงาน</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ============================================================
+           ADAPT
+      ============================================================ -->
+      <section id="adapt">
+        <h2>เจอโจทย์แบบนี้ หยิบอะไรไปใช้</h2>
+        <p class="muted">ข้อสอบจะเปลี่ยนโดเมน — โครงโค้ดเดิมใช้ซ้ำได้แทบทั้งหมด</p>
+
+        <table class="tbl">
+          <thead><tr><th style="width: 36%">โจทย์บอกว่า…</th><th>หยิบจากไหน</th><th>เปลี่ยนอะไร</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>CRUD 2 ตาราง + รูปภาพ</td>
+              <td>ทั้งโปรเจกต์นี้ (categories → books + multer)</td>
+              <td>เปลี่ยนชื่อตาราง/field ตามโจทย์</td>
+            </tr>
+            <tr>
+              <td>books 1:N reviews</td>
+              <td>โครง categories → books</td>
+              <td>สลับบทบาท: books เป็นตารางแม่, reviews มี <code>book_id</code></td>
+            </tr>
+            <tr>
+              <td>products / orders</td>
+              <td>โครงเดิม + ตารางกลาง</td>
+              <td>orders 1:N order_items N:1 products (many-to-many ต้องมีตารางกลาง)</td>
+            </tr>
+            <tr>
+              <td>users / posts</td>
+              <td>โครงเดิม</td>
+              <td><code>posts.user_id → users.id</code>, เพิ่ม avatar upload</td>
+            </tr>
+            <tr>
+              <td>มี HTML/CSS ให้แล้ว เหลือ JS</td>
+              <td>บท 5 Frontend</td>
+              <td>เปิด HTML ดู id จริงก่อน แล้วผูก selector ให้ตรง</td>
+            </tr>
+            <tr>
+              <td>มี Swagger/OpenAPI ให้</td>
+              <td>บท 7 Codegen</td>
+              <td>อ่าน paths + schemas แล้วgen หรือวางโครงตาม</td>
+            </tr>
+            <tr>
+              <td>ให้ใช้ Prisma</td>
+              <td>บท 6</td>
+              <td>เขียน schema.prisma → <code>npx prisma db push</code> → เปลี่ยน query เป็น <code>prisma.x.findMany()</code></td>
+            </tr>
+            <tr>
+              <td>ให้อัปโหลดหลายไฟล์</td>
+              <td>บท 4</td>
+              <td><code>upload.array("images", 5)</code> + <code>req.files</code> + วนลูปบันทึก</td>
+            </tr>
+            <tr>
+              <td>ให้ค้นหา + แบ่งหน้า</td>
+              <td>GET /api/books</td>
+              <td><code>LIKE ?</code> + <code>LIMIT ? OFFSET ?</code> + ส่ง total/totalPages กลับ</td>
+            </tr>
+            <tr>
+              <td>ให้ seed ข้อมูล</td>
+              <td>db.js</td>
+              <td>เขียน INSERT 3–5 แถวใน <code>if (count === 0)</code></td>
+            </tr>
+            <tr>
+              <td>ให้ Docker</td>
+              <td>บท 8</td>
+              <td>Dockerfile + compose (port + volume)</td>
+            </tr>
+            <tr>
+              <td>ให้ทำ Next.js</td>
+              <td>แนวคิดเดียวกับ frontend</td>
+              <td>fetch จาก client component หรือ await fetch ใน server component</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="why">
+          <b>หลักคิด:</b> เปลี่ยนแค่ 3 อย่าง — ① ชื่อตาราง/field ② จำนวนตาราง ③ ที่เก็บไฟล์
+          ที่เหลือ (route, validate, status code, fetch, render) คือสูตรเดิมทั้งหมด
+        </div>
+      </section>
+
+      <!-- ============================================================
+           FINAL CHECK
+      ============================================================ -->
+      <section id="final">
+        <h2>ตรวจงานก่อนส่ง (10 นาที)</h2>
+        <p class="muted">อย่าลืมว่า "รันได้" กับ "ได้คะแนน" คนละเรื่อง — ไล่ตามนี้ทีละข้อ</p>
+
+        <ul class="check">
+          <li><label><input type="checkbox" /> เปิดเว็บแล้วไม่เห็น error ใน Console (F12)</label></li>
+          <li><label><input type="checkbox" /> ตารางทั้ง 2 แสดงข้อมูลได้</label></li>
+          <li><label><input type="checkbox" /> เพิ่มข้อมูลใหม่แล้วขึ้นในตารางทันที</label></li>
+          <li><label><input type="checkbox" /> แก้ไขแล้วค่าอัปเดตจริง (refresh แล้วยังอยู่)</label></li>
+          <li><label><input type="checkbox" /> ลบแล้วหายจากตาราง และลบไฟล์รูปด้วย</label></li>
+          <li><label><input type="checkbox" /> อัปโหลดรูปแล้วเห็นรูปในตาราง (ไม่ใช่ broken image)</label></li>
+          <li><label><input type="checkbox" /> ลองส่งฟอร์มว่าง → ขึ้นข้อความ error ไม่ใช่พัง</label></li>
+          <li><label><input type="checkbox" /> ลอง GET id ที่ไม่มี → ได้ 404 ไม่ใช่ 500</label></li>
+          <li><label><input type="checkbox" /> รีสตาร์ท server แล้วข้อมูลยังอยู่ (DB ถูกบันทึกจริง)</label></li>
+          <li><label><input type="checkbox" /> ไฟล์ <code>.gitignore</code> มี <code>node_modules/</code> และ <code>*.db</code></label></li>
+        </ul>
+
+        <h3>จุดที่เสียคะแนนบ่อย (แต่แก้ไม่ยาก)</h3>
+        <table class="tbl">
+          <thead><tr><th>จุด</th><th>ทำไมเสียคะแนน</th><th>แก้</th></tr></thead>
+          <tbody>
+            <tr><td>ไม่มี FK</td><td>อาจารย์ดู schema แล้วไม่เห็น relation</td><td>เพิ่ม <code>category_id ... REFERENCES categories(id)</code></td></tr>
+            <tr><td>ลบ parent ได้ทั้งที่มี child</td><td>ข้อมูลเสีย</td><td>เช็กก่อนลบแล้วตอบ 409</td></tr>
+            <tr><td>ไม่ validate</td><td>ยิงค่าว่างเข้า DB ได้</td><td>เช็ก <code>!title</code> แล้วตอบ 400</td></tr>
+            <tr><td>ใช้ 200 ตอบทุกอย่าง</td><td>ไม่ตรงหลัก REST</td><td>201 ตอนสร้าง, 204 ตอนลบ</td></tr>
+            <tr><td>ทำงานกับ id เป็น string</td><td>SQLite หาไม่เจอ</td><td><code>Number(req.params.id)</code></td></tr>
+            <tr><td>commit <code>node_modules</code></td><td>repo ใหญ่เกิน</td><td><code>.gitignore</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout danger">
+          <b>ก่อนหมดเวลา 5 นาที:</b> รัน server ใหม่หนึ่งครั้ง + เปิดเว็บ + กดทุกปุ่มอีกรอบ
+          อย่าเพิ่ง push งานตอนที่ยังไม่ได้เทสต์หลังแก้ล่าสุด
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

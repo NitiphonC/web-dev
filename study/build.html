@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ลงมือทำทีละขั้น — Exam Playbook</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="side">
+      <div class="side-brand">
+        <span>📘</span>
+        <div><strong>ลงมือทำทีละขั้น</strong><small>จาก 0 ถึงส่งงาน</small></div>
+      </div>
+
+      <nav class="side-nav">
+        <a href="./index.html">← ภาพรวมข้อสอบ</a>
+        <a href="#basics">0. พื้นฐาน terminal</a>
+        <a href="#clone">1. Clone &amp; Run</a>
+        <a href="#schema">2. ฐานข้อมูล 2 ตาราง</a>
+        <a href="#backend">3. Backend CRUD</a>
+        <a href="#upload">4. อัปโหลดไฟล์</a>
+        <a href="#frontend">5. Frontend JS</a>
+        <a href="#prisma">6. ทางเลือก: Prisma</a>
+        <a href="#codegen">7. OpenAPI / Codegen</a>
+        <a href="#docker">8. Docker</a>
+        <a href="#git">9. Git ส่งงาน</a>
+        <a href="#cheatsheet">10. Cheat sheet</a>
+        <a href="#nextjs">ภาคผนวก: Next.js</a>
+      </nav>
+
+      <nav class="side-nav" style="margin-top: 6px; border-top: 1px solid var(--border); padding-top: 10px">
+        <a href="./help.html">🧯 แก้ error / ปรับโจทย์</a>
+        <a href="./quiz.html">📝 แนวข้อสอบ</a>
+        <a href="http://localhost:3000/">← ตัวแอป</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-crumb">
+        <a href="./index.html">หน้าหลัก</a><span>/</span><b>ลงมือทำทีละขั้น</b>
+      </div>
+
+      <h1 style="margin: 0 0 8px; font-size: 30px; letter-spacing: -0.02em">ลงมือทำทีละขั้น</h1>
+      <p class="lead" style="margin-top: 0">
+        หน้านี้เขียนสำหรับคนที่ "ยังไม่เคยทำ" — ทุกคำสั่งจะบอกว่าให้รันที่โฟลเดอร์ไหน,
+        ทุกโค้ดจะมีคอมเมนต์ว่าบรรทัดนั้นทำอะไร, และทุกขั้นจะบอกว่า <b>ถ้าถูกต้องจะเห็นอะไร</b>
+      </p>
+
+      <!-- ============================================================
+           0. BASICS
+      ============================================================ -->
+      <section id="basics">
+        <h2>0. พื้นฐาน terminal ที่ต้องใช้จริง</h2>
+        <p class="muted">ข้ามได้ถ้าใช้ terminal เป็นแล้ว — แต่ถ้าเคยเจอ "command not found" ให้กลับมาอ่าน</p>
+
+        <h3>terminal / command line คืออะไร</h3>
+        <p>
+          คือช่องที่เรา<b>พิมพ์คำสั่งเป็นข้อความ</b>ให้คอมพิวเตอร์ทำ แทนการคลิกเมาส์
+          ทุกครั้งที่รันโปรเจกต์ Node.js เราจะสั่งงานผ่าน terminal
+        </p>
+
+        <div class="cols-2">
+          <div class="why">
+            <b>หน้าตา terminal</b>
+            <div class="term" style="margin-bottom: 0">
+              <span class="out">C:\Users\ACER\projects\exam&gt;</span>
+              <span class="cmt"># สิ่งที่อยู่หน้าสุดคือ "โฟลเดอร์ปัจจุบัน" (current directory)</span>
+              <span class="cmt"># พิมพ์คำสั่งต่อท้ายบรรทัดนี้แล้วกด Enter</span>
+            </div>
+          </div>
+          <div class="why">
+            <b>3 อย่างที่ต้องรู้จัก</b>
+            <ul>
+              <li><b>โฟลเดอร์ปัจจุบัน</b> — คำสั่งส่วนใหญ่จะทำงานกับโฟลเดอร์นี้</li>
+              <li><b>path</b> — ที่อยู่ของไฟล์ เช่น <code>C:\projects\exam\server.js</code></li>
+              <li><b>exit code</b> — 0 = สำเร็จ, ไม่ใช่ 0 = มีปัญหา (terminal จะแสดง error สีแดง)</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>คำสั่งที่ใช้บ่อย (Windows PowerShell)</h3>
+        <table class="tbl">
+          <thead>
+            <tr><th style="width: 34%">คำสั่ง</th><th>ทำอะไร</th><th>ตัวอย่าง</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>pwd</code></td>
+              <td>ดูว่าตอนนี้อยู่โฟลเดอร์ไหน</td>
+              <td><code>pwd</code> → <code>D:\exam</code></td>
+            </tr>
+            <tr>
+              <td><code>dir</code> (หรือ <code>ls</code>)</td>
+              <td>ดูไฟล์/โฟลเดอร์ในที่ปัจจุบัน</td>
+              <td><code>dir</code></td>
+            </tr>
+            <tr>
+              <td><code>cd ชื่อโฟลเดอร์</code></td>
+              <td>เข้าโฟลเดอร์</td>
+              <td><code>cd exam</code></td>
+            </tr>
+            <tr>
+              <td><code>cd ..</code></td>
+              <td>ถอยออกไปหนึ่งชั้น</td>
+              <td><code>cd ..</code></td>
+            </tr>
+            <tr>
+              <td><code>mkdir ชื่อ</code></td>
+              <td>สร้างโฟลเดอร์ใหม่</td>
+              <td><code>mkdir exam</code></td>
+            </tr>
+            <tr>
+              <td><code>node -v</code></td>
+              <td>ดูเวอร์ชัน Node.js ที่ติดตั้ง</td>
+              <td><code>node -v</code> → <code>v24.x.x</code></td>
+            </tr>
+            <tr>
+              <td><code>npm -v</code></td>
+              <td>ดูเวอร์ชัน npm (ตัวติดตั้งไลบรารี)</td>
+              <td><code>npm -v</code> → <code>11.x.x</code></td>
+            </tr>
+            <tr>
+              <td><code>node ไฟล์.js</code></td>
+              <td>รันไฟล์ JavaScript ด้วย Node</td>
+              <td><code>node server.js</code></td>
+            </tr>
+            <tr>
+              <td><code>npm install</code></td>
+              <td>ติดตั้งไลบรารีทั้งหมดใน <code>package.json</code></td>
+              <td><code>npm install</code></td>
+            </tr>
+            <tr>
+              <td><span class="kbd">Ctrl</span> + <span class="kbd">C</span></td>
+              <td>หยุดโปรแกรมที่กำลังรันอยู่ (เช่น server)</td>
+              <td>กดในหน้า terminal ที่ server รันอยู่</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="why">
+          <b>กฎง่าย ๆ 3 ข้อ</b>
+          <ul>
+            <li>คำสั่ง <code>npm</code> และ <code>node</code> ต้องรันใน<b>โฟลเดอร์โปรเจกต์</b> (ที่มี <code>package.json</code>) — ไม่ใช่โฟลเดอร์ไหนก็ได้</li>
+            <li>ถ้าลืมว่าอยู่ไหน ให้พิมพ์ <code>pwd</code> แล้วดู</li>
+            <li>ถ้า terminal ค้าง/ไม่กลับมา ให้กด <span class="kbd">Ctrl</span>+<span class="kbd">C</span> — server ที่รันอยู่จะหยุด</li>
+          </ul>
+        </div>
+
+        <div class="danger-box">
+          <b>กับดักที่มือใหม่เจอบ่อย:</b> เปิด terminal มาอยู่ที่ <code>C:\Users\ACER</code> แล้วพิมพ์ <code>npm start</code>
+          → จะได้ <code>ENOENT: no such file or directory, open 'package.json'</code>
+          แปลว่ายังไม่ได้ <code>cd</code> เข้าโฟลเดอร์โปรเจกต์
+        </div>
+
+        <h3>พอร์ต (port) คืออะไร</h3>
+        <p>
+          เครื่องหนึ่งเครื่องมี "ประตู" ให้โปรแกรมเปิดรับการเชื่อมต่อได้หลายบาน เรียกเป็นตัวเลข เช่น
+          <code>3000</code> — ถ้า server เปิดที่ 3000 เว็บของเราจะอยู่ที่ <code>http://localhost:3000</code>
+        </p>
+        <div class="why">
+          ถ้าเจอ <code>EADDRINUSE: address already in use :::3000</code> แปลว่า<b>มีโปรแกรมอื่นใช้พอร์ต 3000 อยู่</b>
+          (มักเป็น server ตัวเก่าที่ยังไม่ปิด) → ปิดตัวเก่าด้วย <span class="kbd">Ctrl</span>+<span class="kbd">C</span>
+          หรือเปลี่ยนพอร์ตด้วย <code>set PORT=3001 &amp;&amp; npm start</code>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           1. CLONE
+      ============================================================ -->
+      <section id="clone">
+        <h2>1. Clone repo แล้วรันให้ขึ้น</h2>
+        <p class="muted">ขั้นนี้ต้องจบให้ได้ก่อนไปต่อ — ถ้ารันไม่ขึ้น อย่าเพิ่งเขียนโค้ด</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>เปิด terminal ที่โฟลเดอร์ที่จะเก็บงาน</h4>
+            <p>เช่นสร้างโฟลเดอร์ <code>exam</code> บน Desktop แล้วเข้าไปข้างใน</p>
+            <div class="term">
+              <span class="cmd">cd ~/Desktop</span>
+              <span class="cmd">mkdir exam</span>
+              <span class="cmd">cd exam</span>
+              <span class="cmd">pwd</span>
+              <span class="out">C:\Users\ACER\Desktop\exam</span>
+            </div>
+            <div class="why">
+              <b>ทำไมต้องมีโฟลเดอร์เปล่าก่อน?</b> เพราะ <code>git clone</code> จะสร้างโฟลเดอร์ย่อยให้เอง
+              ถ้า clone ในโฟลเดอร์ที่มีไฟล์อยู่แล้วจะไม่พัง แต่จะดูรกและหาไม่เจอ
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>clone repo ของโจทย์</h4>
+            <div class="term">
+              <span class="cmd">git clone &lt;repo-url&gt; app</span>
+              <span class="out">Cloning into 'app'...</span>
+              <span class="out">remote: Enumerating objects: 24, done.</span>
+              <span class="out">Receiving objects: 100% (24/24), done.</span>
+              <span class="cmd">cd app</span>
+              <span class="cmd">dir</span>
+              <span class="out">package.json   server.js   public/   ...</span>
+            </div>
+            <div class="why">
+              <b>ต้องเห็นอะไร:</b> โฟลเดอร์ <code>app</code> ที่มี <code>package.json</code> อยู่ข้างใน
+              ถ้าไม่มี <code>package.json</code> แปลว่า clone ผิดระดับ (อาจอยู่ชั้นบนเกินไป) → <code>cd</code> ลงไปอีกชั้น
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>ติดตั้ง dependencies</h4>
+            <div class="term">
+              <span class="cmd">npm install</span>
+              <span class="out">added 87 packages, and audited 88 packages in 11s</span>
+              <span class="out">found 0 vulnerabilities</span>
+            </div>
+            <div class="why">
+              <b>npm install ทำอะไร:</b> อ่านรายชื่อไลบรารีใน <code>package.json</code> แล้วดาวน์โหลดลงโฟลเดอร์
+              <code>node_modules/</code> — โฟลเดอร์นี้ใหญ่และ<b>ไม่ต้อง commit ขึ้น git</b>
+              (ใน <code>.gitignore</code> มีบรรทัด <code>node_modules/</code> ไว้แล้ว)
+            </div>
+            <div class="expect">
+              <b>ถูก:</b> ขึ้น "added … packages" และกลับมาที่ prompt
+              <br /><b>ผิด:</b> <code>npm ERR! code ENOENT … package.json</code> = อยู่ผิดโฟลเดอร์
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>รัน server</h4>
+            <div class="term">
+              <span class="cmd">npm start</span>
+              <span class="out">✅ Server: http://localhost:3000</span>
+              <span class="out">📚 Books : http://localhost:3000/#books</span>
+              <span class="out">🗂️  Cats  : http://localhost:3000/#categories</span>
+              <span class="cmt"># บรรทัดนี้จะ "ค้าง" ไว้แบบนี้ = server กำลังทำงาน ไม่ใช่ค้างผิดปกติ</span>
+            </div>
+            <div class="why">
+              <b>สำคัญ:</b> terminal หน้านี้ถูกใช้งานอยู่ — จะพิมพ์คำสั่งอื่นต่อไม่ได้
+              ให้เปิด terminal อีกหน้าต่างสำหรับคำสั่งอื่น (เช่น <code>curl</code> หรือ <code>git</code>)
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>เปิดเบราว์เซอร์ตรวจ</h4>
+            <p>เปิด <code>http://localhost:3000</code> ควรเห็นตารางหนังสือ 3 เล่ม และเมนู "หมวดหมู่"</p>
+            <div class="expect">
+              <b>เช็ก 3 จุด:</b> ① หน้าเว็บขึ้นไม่ใช่ error ② ตารางมีข้อมูล ③ กด "หมวดหมู่" แล้วเห็น 3 หมวด
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <b>ถ้าโจทย์ให้ Docker มา</b> — ใช้ <code>docker compose up --build</code> แล้วเปิดพอร์ตตามที่ compose ประกาศ
+          (ดูรายละเอียดที่ <a href="#docker">บท 8</a>)
+        </div>
+      </section>
+
+      <!-- ============================================================
+           2. SCHEMA
+      ============================================================ -->
+      <section id="schema">
+        <h2>2. ฐานข้อมูล 2 ตาราง</h2>
+        <p class="muted">เลือกโมเดลที่ "มีตารางลูก" ชัด ๆ เพื่อให้ได้ FK และได้คะแนนเรื่อง relation</p>
+
+        <h3>คิดก่อนเขียน: 1 : N คืออะไร</h3>
+        <p>
+          ตัวอย่างนี้ใช้ <b>categories</b> (หมวดหมู่) กับ <b>books</b> (หนังสือ):
+          หมวดหมู่หนึ่งมีหนังสือได้หลายเล่ม แต่หนังสือหนึ่งเล่มอยู่ได้หมวดเดียว → ความสัมพันธ์แบบ <b>หนึ่งต่อหลาย (1:N)</b>
+        </p>
+
+        <div class="erd">
+          <div class="erd-box">
+            <h4>categories</h4>
+            <ul>
+              <li><b>id</b> PK</li>
+              <li>name</li>
+              <li>description</li>
+              <li>created_at</li>
+            </ul>
+          </div>
+          <div class="erd-arrow">1 ──── N</div>
+          <div class="erd-box">
+            <h4>books</h4>
+            <ul>
+              <li><b>id</b> PK</li>
+              <li>title</li>
+              <li>author</li>
+              <li>price, stock</li>
+              <li>cover_url</li>
+              <li><b>category_id</b> FK → categories.id</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="why">
+          <b>ศัพท์ 3 คำที่ต้องพูดได้</b>
+          <ul>
+            <li><b>PK (Primary Key)</b> — คอลัมน์ที่ระบุแถวนั้นแบบไม่ซ้ำ เช่น <code>id</code></li>
+            <li><b>FK (Foreign Key)</b> — คอลัมน์ที่ชี้ไปยัง PK ของอีกตาราง เช่น <code>books.category_id</code></li>
+            <li><b>ON DELETE RESTRICT</b> — ห้ามลบหมวดหมู่ถ้ายังมีหนังสืออยู่ในหมวดนั้น</li>
+          </ul>
+        </div>
+
+        <span class="file-tag">db.js</span>
+        <pre><code>const path = require("node:path");
+const { DatabaseSync } = require("node:sqlite");   // มากับ Node 22.5+ ไม่ต้อง npm install
+
+// เก็บไฟล์ฐานข้อมูลไว้ข้าง ๆ ไฟล์นี้ (library.db)
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, "library.db");
+const db = new DatabaseSync(DB_PATH);
+
+db.exec(`
+  PRAGMA foreign_keys = ON;   // ⚠ SQLite ปิด FK เป็นค่าเริ่มต้น ต้องเปิดทุกครั้ง
+
+  CREATE TABLE IF NOT EXISTS categories (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,  // วิ่งเลข 1,2,3.. เอง
+    name        TEXT    NOT NULL UNIQUE,            // ห้ามว่าง ห้ามซ้ำ
+    description TEXT    DEFAULT '',
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS books (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    title       TEXT    NOT NULL,
+    author      TEXT    NOT NULL,
+    price       REAL    NOT NULL DEFAULT 0,
+    stock       INTEGER NOT NULL DEFAULT 0,
+    cover_url   TEXT,                                // เก็บ "path" ของรูป ไม่ใช่ตัวไฟล์
+    category_id INTEGER NOT NULL,
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_books_category ON books(category_id);
+`);
+
+// seed ข้อมูลตัวอย่าง (ทำครั้งเดียวตอนที่ยังไม่มีข้อมูล)
+const count = db.prepare("SELECT COUNT(*) AS c FROM categories").get().c;
+if (count === 0) {
+  const addCategory = db.prepare("INSERT INTO categories (name, description) VALUES (?, ?)");
+  addCategory.run("Programming", "หนังสือเขียนโปรแกรม");
+  addCategory.run("Database", "หนังสือฐานข้อมูล");
+
+  const addBook = db.prepare(
+    "INSERT INTO books (title, author, price, stock, category_id) VALUES (?, ?, ?, ?, ?)"
+  );
+  addBook.run("Clean Code", "Robert C. Martin", 890, 5, 1);
+}
+
+module.exports = db;   // ไฟล์อื่น (server.js) require ไปใช้ต่อ
+</code></pre>
+
+        <div class="why">
+          <b>ทำไมต้องมี <code>PRAGMA foreign_keys = ON</code>?</b>
+          SQLite ไม่บังคับ FK ให้อัตโนมัติ ถ้าไม่เปิด ตารางจะยอมให้ใส่ <code>category_id = 999</code>
+          ที่ไม่มีอยู่จริงได้ — เปิดแล้วจะ error ทันที ซึ่งนั่นคือสิ่งที่เราต้องการ
+        </div>
+
+        <h3>รันเพื่อสร้างฐานข้อมูล</h3>
+        <p>
+          ปกติ <code>server.js</code> จะ <code>require("./db")</code> ตอนเริ่มระบบ — ตารางจะถูกสร้างให้อัตโนมัติ
+          ถ้าอยากสร้าง/seed ล่วงหน้าก่อนเปิด server ก็รันไฟล์นี้ตรง ๆ ได้ (รันซ้ำไม่พัง เพราะมี <code>IF NOT EXISTS</code>)
+        </p>
+        <div class="term">
+          <span class="cmd">node db.js</span>
+          <span class="cmt"># ไม่มี output = สำเร็จ (ปกติของสคริปต์แบบนี้)</span>
+          <span class="cmd">dir *.db</span>
+          <span class="out">library.db  1,234,567 bytes</span>
+        </div>
+        <div class="expect">
+          <b>ต้องเห็น:</b> ไฟล์ <code>library.db</code> เกิดขึ้นในโฟลเดอร์โปรเจกต์
+          ถ้าไม่เกิด = มี error ใน SQL ให้อ่านบรรทัดแรกของ error (มักเป็น <code>SQLITE_ERROR: near "..."</code>)
+        </div>
+
+        <div class="danger-box">
+          <b>ห้ามลืม:</b> คอลัมน์ <code>cover_url</code> ต้องมีตั้งแต่ตอนสร้างตาราง ถ้าลืมแล้วค่อยมาเพิ่มทีหลัง
+          ต้อง <code>ALTER TABLE</code> หรือลบ DB ทิ้งแล้วสร้างใหม่ — เสียเวลาตอนสอบ
+        </div>
+      </section>
+
+      <!-- ============================================================
+           3. BACKEND
+      ============================================================ -->
+      <section id="backend">
+        <h2>3. Backend CRUD</h2>
+        <p class="muted">ทำตารางเดียวให้ครบก่อน แล้วก็อปไปแปลง — เร็วกว่าเขียนใหม่</p>
+
+        <h3>ลำดับการทำงานของ Express (สำคัญมาก)</h3>
+        <p>
+          request เข้ามา → ผ่าน <b>middleware</b> ตามลำดับที่ประกาศ → ถึง <b>route</b> ที่ตรงกับ method + path → ส่ง response
+          ถ้าไม่มี route ไหนตรงเลย จะตกไปที่ตัวดัก 404
+        </p>
+
+        <h3>ตามรอย 1 request: จากกดปุ่มถึงเห็นข้อมูล</h3>
+        <p>ตัวอย่าง: ผู้ใช้กด "บันทึกหนังสือ" — ไล่ตามลำดับนี้แล้วจะรู้ว่าถ้าพังต้องเปิดไฟล์ไหน</p>
+        <ol class="tight-list">
+          <li><b>public/index.html</b> — มี <code>&lt;form id="book-form"&gt;</code> และ <code>&lt;tbody id="books-body"&gt;</code> (โครงที่อาจารย์ให้มา)</li>
+          <li><b>public/app.js</b> — submit handler: <code>e.preventDefault()</code> → สร้าง <code>FormData</code> → <code>fetch("/api/books", { method: "POST", body: fd })</code></li>
+          <li><b>server.js</b> — middleware <code>express.json()</code> / multer ทำงาน → ถึง <code>app.post("/api/books", upload.single("cover"), ...)</code></li>
+          <li><b>server.js</b> — validate ค่าที่ส่งมา → <code>db.prepare("INSERT ...").run(...)</code></li>
+          <li><b>db.js</b> — ฐานข้อมูลรับข้อมูลลงตาราง <code>books</code> (ถ้า FK ผิดจะ error ที่นี่)</li>
+          <li><b>server.js</b> — <code>res.status(201).json(bookRowToJson(row))</code></li>
+          <li><b>public/app.js</b> — <code>await request(...)</code> ได้ข้อมูล → ปิด dialog → เรียก <code>loadBooks()</code></li>
+          <li><b>public/app.js</b> — <code>tbody.innerHTML = ...</code> → ผู้ใช้เห็นแถวใหม่</li>
+        </ol>
+        <div class="why">
+          <b>ถ้าพังที่ขั้นไหน อาการจะเป็นแบบนี้:</b>
+          <ul>
+            <li>ขั้น 2 ไม่ทำงาน → กดปุ่มแล้วเงียบ (เปิด Console ดู error)</li>
+            <li>ขั้น 3 ได้ 404 → path ผิด หรือ route ยังไม่ถูกประกาศ</li>
+            <li>ขั้น 3 ได้ 400 → field ไม่ครบ หรือชื่อ field ไม่ตรง</li>
+            <li>ขั้น 4–5 ได้ 500 → SQL/DB พัง (ดู stack ใน terminal)</li>
+            <li>ขั้น 6–8 สำเร็จแต่ตารางว่าง → ชื่อ field ที่ frontend อ่านไม่ตรงกับ JSON</li>
+          </ul>
+        </div>
+
+        <span class="file-tag">server.js (โครงหลัก)</span>
+        <pre><code>const path = require("node:path");
+const fs = require("node:fs");
+const express = require("express");
+const multer = require("multer");
+const db = require("./db");          // ได้ object ฐานข้อมูลกลับมา
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const UPLOAD_DIR = path.join(__dirname, "uploads");
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });   // สร้างโฟลเดอร์ถ้ายังไม่มี (ไม่พังถ้ามีแล้ว)
+
+app.use(express.json());                          // อ่าน JSON body → req.body
+app.use(express.urlencoded({ extended: true }));  // อ่าน form แบบ urlencoded
+app.use("/uploads", express.static(UPLOAD_DIR));  // เปิดให้เข้าถึงไฟล์ใน /uploads
+app.use(express.static(path.join(__dirname, "public")));  // เสิร์ฟ HTML/CSS/JS
+
+// ... routes อยู่ตรงนี้ ...
+
+app.listen(PORT, () =&gt; console.log(`Server: http://localhost:${PORT}`));
+</code></pre>
+
+        <div class="why">
+          <b>ทำไม <code>express.json()</code> ต้องมาก่อน route?</b>
+          เพราะมันเป็น middleware ที่แปลงข้อความ JSON เป็น object แล้วใส่ใน <code>req.body</code>
+          ถ้าประกาศทีหลัง route จะอ่าน <code>req.body</code> ไม่ทัน → ได้ <code>undefined</code>
+        </div>
+
+        <h3>ก่อนเขียน route: แปลงชื่อคอลัมน์ให้ตรงกับ frontend</h3>
+        <p>
+          ในฐานข้อมูลเราใช้ <code>cover_url</code> (snake_case) แต่ฝั่ง frontend ใช้ <code>coverUrl</code> (camelCase)
+          ถ้าส่งแถวจาก DB ออกไปตรง ๆ ฝั่ง JS จะอ่านได้ <code>undefined</code> — เขียนตัวแปลงไว้ที่เดียวแล้วเรียกใช้ทุก route
+        </p>
+        <span class="file-tag">server.js</span>
+        <pre><code>// แถวจาก DB ใช้ชื่อคอลัมน์แบบ snake_case → แปลงเป็น camelCase ให้ frontend
+function bookRowToJson(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    author: row.author,
+    price: row.price,
+    stock: row.stock,
+    coverUrl: row.cover_url,                  // ⚠ จุดที่คนลืมบ่อย
+    categoryId: row.category_id,
+    categoryName: row.category_name ?? null,  // มาจาก JOIN (ถ้าไม่มีให้เป็น null)
+    createdAt: row.created_at,
+  };
+}
+</code></pre>
+        <div class="why">
+          <b>ถ้าไม่แปลง:</b> frontend จะได้ <code>undefined</code> ตอนอ่าน <code>book.coverUrl</code>
+          → รูปไม่ขึ้น / ตารางแสดงค่าว่าง ทั้งที่ในฐานข้อมูลมีข้อมูลครบ
+        </div>
+
+        <h3>GET — ดึงรายการทั้งหมด (พร้อม JOIN + ค้นหา + แบ่งหน้า)</h3>
+        <span class="file-tag">server.js</span>
+        <pre><code>app.get("/api/books", (req, res) =&gt; {
+  // 1) อ่านค่าจาก query string: /api/books?search=clean&amp;category_id=1&amp;page=2
+  const search = (req.query.search || "").trim();
+  const page  = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
+  const offset = (page - 1) * limit;   // ข้ามไปกี่แถว
+
+  // 2) ประกอบ WHERE แบบมีเงื่อนไข (ต้องใช้ ? เท่านั้น ห้ามต่อ string)
+  const where = [];
+  const params = [];
+  if (search) {
+    where.push("(b.title LIKE ? OR b.author LIKE ?)");
+    params.push(`%${search}%`, `%${search}%`);
+  }
+  if (Number(req.query.category_id)) {          // กรองตามหมวด (ถ้าส่งมา)
+    where.push("b.category_id = ?");
+    params.push(Number(req.query.category_id));
+  }
+  const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+  // 3) นับทั้งหมดก่อน (ไว้คำนวณจำนวนหน้า)
+  const total = db.prepare(`SELECT COUNT(*) AS c FROM books b ${whereSql}`).get(...params).c;
+
+  // 4) ดึงข้อมูลจริง + JOIN เอาชื่อหมวดหมู่มาด้วย
+  const rows = db.prepare(`
+    SELECT b.*, c.name AS category_name
+    FROM books b
+    JOIN categories c ON c.id = b.category_id
+    ${whereSql}
+    ORDER BY b.id DESC
+    LIMIT ? OFFSET ?
+  `).all(...params, limit, offset);
+
+  // 5) ส่งกลับเป็น object ที่มีข้อมูล + ข้อมูลแบ่งหน้า
+  //    rows.map(bookRowToJson) = แปลงทีละแถวให้ชื่อ field ตรงกับ frontend
+  res.json({ data: rows.map(bookRowToJson), page, limit, total, totalPages: Math.ceil(total / limit) });
+});
+</code></pre>
+
+        <div class="why">
+          <b>ทำไมต้อง <code>?</code> ไม่ใช่ต่อ string ตรง ๆ?</b>
+          เพราะถ้าต่อ string แล้วผู้ใช้พิมพ์ <code>' OR 1=1 --</code> จะกลายเป็น SQL injection
+          การใช้ <code>?</code> ทำให้ไลบรารีจัดการ escape ให้ปลอดภัย
+        </div>
+
+        <h3>GET ตัวเดียว / POST / PUT / DELETE</h3>
+        <span class="file-tag">server.js</span>
+        <pre><code>// ---------- READ 1 รายการ ----------
+app.get("/api/books/:id", (req, res) =&gt; {
+  const id = Number(req.params.id);            // path param มาเป็น string ต้องแปลง
+  const row = db.prepare(`
+    SELECT b.*, c.name AS category_name
+    FROM books b JOIN categories c ON c.id = b.category_id
+    WHERE b.id = ?
+  `).get(id);
+
+  if (!row) return res.status(404).json({ message: "ไม่พบหนังสือ" });
+  res.json(bookRowToJson(row));
+});
+
+// ---------- CREATE ----------
+app.post("/api/books", upload.single("cover"), (req, res) =&gt; {
+  const { title, author, price = 0, stock = 0, category_id } = req.body;
+
+  // validate ก่อนเสมอ
+  if (!title || !title.trim()) return res.status(400).json({ message: "ต้องระบุชื่อหนังสือ" });
+  if (!author || !author.trim()) return res.status(400).json({ message: "ต้องระบุชื่อผู้แต่ง" });
+  if (!Number(category_id)) return res.status(400).json({ message: "ต้องเลือกหมวดหมู่" });
+
+  // ถ้ามีไฟล์แนบ multer จะใส่ข้อมูลไฟล์ไว้ที่ req.file
+  const coverUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+  const info = db.prepare(
+    "INSERT INTO books (title, author, price, stock, cover_url, category_id) VALUES (?,?,?,?,?,?)"
+  ).run(title.trim(), author.trim(), Number(price) || 0, Number(stock) || 0, coverUrl, Number(category_id));
+
+  // ดึงกลับมาแบบ JOIN เพื่อให้ได้ category_name ติดไปด้วย
+  const row = db.prepare(`
+    SELECT b.*, c.name AS category_name
+    FROM books b JOIN categories c ON c.id = b.category_id
+    WHERE b.id = ?
+  `).get(Number(info.lastInsertRowid));
+
+  res.status(201).json(bookRowToJson(row));    // 201 = สร้างสำเร็จ
+});
+
+// ---------- UPDATE ----------
+app.put("/api/books/:id", upload.single("cover"), (req, res) =&gt; {
+  const id = Number(req.params.id);
+  const existing = db.prepare("SELECT * FROM books WHERE id = ?").get(id);
+  if (!existing) return res.status(404).json({ message: "ไม่พบหนังสือ" });
+
+  const { title, author, price, stock, category_id } = req.body;
+  if (!title || !author || !category_id) return res.status(400).json({ message: "ข้อมูลไม่ครบ" });
+
+  // ถ้าไม่ได้อัปโหลดรูปใหม่ ให้ใช้รูปเดิม
+  const coverUrl = req.file ? `/uploads/${req.file.filename}` : existing.cover_url;
+
+  db.prepare(`
+    UPDATE books SET title=?, author=?, price=?, stock=?, cover_url=?, category_id=? WHERE id=?
+  `).run(title, author, Number(price) || 0, Number(stock) || 0, coverUrl, Number(category_id), id);
+
+  const row = db.prepare(`
+    SELECT b.*, c.name AS category_name
+    FROM books b JOIN categories c ON c.id = b.category_id
+    WHERE b.id = ?
+  `).get(id);
+
+  res.json(bookRowToJson(row));
+});
+
+// ---------- DELETE ----------
+app.delete("/api/books/:id", (req, res) =&gt; {
+  const id = Number(req.params.id);
+  const book = db.prepare("SELECT * FROM books WHERE id = ?").get(id);
+  if (!book) return res.status(404).json({ message: "ไม่พบหนังสือ" });
+
+  db.prepare("DELETE FROM books WHERE id = ?").run(id);
+
+  // ลบไฟล์รูปที่ผูกอยู่ด้วย (ถ้ามี) — ไม่ต้องรอให้เสร็จ
+  if (book.cover_url) {
+    fs.promises.unlink(path.join(UPLOAD_DIR, path.basename(book.cover_url))).catch(() =&gt; {});
+  }
+
+  res.status(204).end();                      // 204 = สำเร็จ ไม่มี body
+});
+</code></pre>
+
+        <div class="why">
+          <b>3 จุดที่คนลืมบ่อยที่สุด</b>
+          <ul>
+            <li><code>Number(req.params.id)</code> — ถ้าไม่แปลง SQLite จะเทียบ string กับ integer แล้วไม่เจอ</li>
+            <li><code>Number(info.lastInsertRowid)</code> — ค่าที่ได้เป็น BigInt เอาไปใส่ JSON ตรง ๆ ไม่ได้</li>
+            <li><code>return</code> หน้า <code>res.status(400)...</code> — ถ้าไม่ return โค้ดจะไหลต่อไปบันทึกข้อมูลทั้งที่ข้อมูลไม่ครบ</li>
+          </ul>
+        </div>
+
+        <h3>ทดสอบด้วย curl</h3>
+        <p>เปิด terminal อีกหน้า (อย่าปิดหน้า server) แล้วรันทีละคำสั่ง</p>
+        <div class="term">
+          <span class="cmt"># 1) ดูทั้งหมด</span>
+          <span class="cmd">curl http://localhost:3000/api/books</span>
+          <span class="out">{"data":[{...}],"page":1,"limit":20,"total":3,"totalPages":1}</span>
+
+          <span class="cmt"># 2) สร้างใหม่ (JSON)</span>
+          <span class="cmd">curl -X POST http://localhost:3000/api/books -H "Content-Type: application/json" -d "{\"title\":\"Refactoring\",\"author\":\"Martin Fowler\",\"price\":950,\"stock\":2,\"category_id\":1}"</span>
+          <span class="out">{"id":4,"title":"Refactoring",...}</span>
+
+          <span class="cmt"># 3) แก้ไข</span>
+          <span class="cmd">curl -X PUT http://localhost:3000/api/books/4 -H "Content-Type: application/json" -d "{\"title\":\"Refactoring 2nd\",\"author\":\"Martin Fowler\",\"category_id\":1}"</span>
+
+          <span class="cmt"># 4) ลบ</span>
+          <span class="cmd">curl -X DELETE http://localhost:3000/api/books/4 -i</span>
+          <span class="out">HTTP/1.1 204 No Content</span>
+        </div>
+
+        <div class="expect">
+          <b>ถ้า curl ค้าง:</b> ปกติแปลว่า server ไม่ได้รันอยู่ หรือพอร์ตไม่ตรง → กลับไปดูหน้า terminal ของ server
+          <br /><b>ถ้าได้ 404:</b> path ผิด (เช่นลืม <code>/api</code>) — ดูที่ <a href="./help.html#http">ตาราง HTTP status</a>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           4. UPLOAD
+      ============================================================ -->
+      <section id="upload">
+        <h2>4. อัปโหลดไฟล์</h2>
+        <p class="muted">ท่องให้ขึ้นใจ: <strong>multer.single("ชื่อ field")</strong> ต้องตรงกับ <code>formData.append("ชื่อเดียวกัน", file)</code></p>
+
+        <h3>ทำไมต้องใช้ multer</h3>
+        <p>
+          ไฟล์ที่ส่งผ่านฟอร์มจะมาในรูปแบบ <code>multipart/form-data</code> ซึ่งเป็นข้อมูลหลายส่วนติดกัน
+          <code>express.json()</code> อ่านไม่ได้ — <b>multer</b> คือ middleware ที่แกะมันออกมาเป็น
+          <code>req.file</code> (ไฟล์เดี่ยว) หรือ <code>req.files</code> (หลายไฟล์)
+        </p>
+
+        <h3>ฝั่ง server</h3>
+        <span class="file-tag">server.js</span>
+        <pre><code>const multer = require("multer");
+
+// 1) กำหนดว่าจะเก็บไฟล์ที่ไหน และตั้งชื่อไฟล์อย่างไร
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =&gt; cb(null, UPLOAD_DIR),   // โฟลเดอร์ปลายทาง
+  filename: (req, file, cb) =&gt; {
+    const ext = path.extname(file.originalname).toLowerCase();  // ".png"
+    const base = path.basename(file.originalname, ext)
+      .replace(/[^a-zA-Z0-9ก-๙_-]/g, "_")     // กันอักขระแปลกในชื่อไฟล์
+      .slice(0, 40);
+    cb(null, `${Date.now()}-${base}${ext}`);   // เติมเวลาเพื่อไม่ให้ชื่อซ้ำ
+  },
+});
+
+// 2) สร้าง middleware พร้อมข้อจำกัด
+const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 },      // 2 MB
+  fileFilter: (req, file, cb) =&gt; {
+    const ok = ["image/png", "image/jpeg", "image/webp", "image/gif"].includes(file.mimetype);
+    if (!ok) return cb(new Error("อนุญาตเฉพาะไฟล์รูปภาพ"));
+    cb(null, true);                             // true = ยอมรับไฟล์นี้
+  },
+});
+
+// 3) เปิดให้เบราว์เซอร์เข้าถึงไฟล์ที่อัปโหลดแล้ว
+app.use("/uploads", express.static(UPLOAD_DIR));
+
+// 4) ใช้ใน route — ชื่อ "cover" ต้องตรงกับฝั่ง client
+app.post("/api/books", upload.single("cover"), (req, res) =&gt; {
+  const coverUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  // ... insert ลง DB ตามปกติ แล้วเก็บ coverUrl ลงคอลัมน์ cover_url
+});
+</code></pre>
+
+        <div class="why">
+          <b>ทำไมต้อง <code>express.static(UPLOAD_DIR)</code>?</b>
+          เพราะการบันทึกไฟล์ลงดิสก์เฉย ๆ ไม่ได้ทำให้เบราว์เซอร์เปิดดูได้
+          ต้องประกาศให้ Express เสิร์ฟโฟลเดอร์นั้นผ่าน URL เช่น <code>/uploads/1712345-cover.png</code>
+        </div>
+
+        <h3>ฝั่ง client</h3>
+        <span class="file-tag">public/app.js</span>
+        <pre><code>const formData = new FormData();
+formData.append("title", title);
+formData.append("author", author);
+formData.append("category_id", categoryId);
+formData.append("cover", fileInput.files[0]);   // ⚠ ชื่อต้องตรงกับ upload.single("cover")
+
+const res = await fetch("/api/books", {
+  method: "POST",
+  body: formData,
+  // ❌ ห้ามใส่ headers: { "Content-Type": "multipart/form-data" }
+  //    เพราะเบราว์เซอร์ต้องเติม boundary ให้เอง
+});
+</code></pre>
+
+        <div class="danger-box">
+          <b>error ยอดนิยม:</b> ใส่ <code>Content-Type: multipart/form-data</code> เอง →
+          server อ่านไฟล์ไม่ได้ เพราะขาดค่า <code>boundary=...</code> ที่เบราว์เซอร์จะเติมให้
+          อาการคือ <code>req.file</code> เป็น <code>undefined</code> ตลอด
+        </div>
+
+        <h3>ทดสอบอัปโหลดด้วย curl</h3>
+        <div class="term">
+          <span class="cmd">curl -X POST http://localhost:3000/api/books -F "title=Test" -F "author=Me" -F "category_id=1" -F "cover=@C:\path\cover.png"</span>
+          <span class="out">{"id":5,...,"coverUrl":"/uploads/1712345678-cover.png"}</span>
+          <span class="cmt"># เปิดรูปที่ได้ในเบราว์เซอร์</span>
+          <span class="cmd">curl -I http://localhost:3000/uploads/1712345678-cover.png</span>
+          <span class="out">HTTP/1.1 200 OK</span>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           5. FRONTEND
+      ============================================================ -->
+      <section id="frontend">
+        <h2>5. Frontend JS</h2>
+        <p class="muted">ถ้าอาจารย์ให้ HTML/CSS มาแล้ว เหลือแค่ 4 อย่าง: โหลด → แสดง → รับฟอร์ม → ส่งคำสั่ง</p>
+
+        <div class="why">
+          <b>ก่อนเขียน JS ให้เปิด HTML ดู id/class ที่มีให้ก่อน</b>
+          เพราะ JS ต้องอ้างถึง element เดิม เช่น <code>#books-body</code>, <code>#book-form</code>
+          ถ้าเขียน JS โดยไม่ดู HTML จะได้ <code>Cannot read properties of null</code>
+        </div>
+
+        <h3>① โหลดข้อมูล + แสดงตาราง</h3>
+        <span class="file-tag">public/app.js</span>
+        <pre><code>const API = "/api";
+
+// helper: เรียก fetch แล้วแปลง JSON + โยน error ถ้า status ไม่ใช่ 2xx
+async function request(url, options = {}) {
+  const res = await fetch(url, options);
+  if (res.status === 204) return null;                 // DELETE สำเร็จ ไม่มี body
+
+  const isJson = (res.headers.get("content-type") || "").includes("application/json");
+  const body = isJson ? await res.json() : null;
+
+  if (!res.ok) throw new Error(body?.message || `HTTP ${res.status}`);
+  return body;
+}
+
+async function loadBooks() {
+  const { data } = await request(`${API}/books`);      // GET
+  const tbody = document.querySelector("#books-body");
+
+  tbody.innerHTML = data.map((b) =&gt; `
+    &lt;tr&gt;
+      &lt;td&gt;${b.coverUrl ? `&lt;img class="thumb" src="${b.coverUrl}"&gt;` : "ไม่มีรูป"}&lt;/td&gt;
+      &lt;td&gt;${escapeHtml(b.title)}&lt;/td&gt;
+      &lt;td&gt;${escapeHtml(b.author)}&lt;/td&gt;
+      &lt;td&gt;${b.price}&lt;/td&gt;
+      &lt;td&gt;
+        &lt;button data-edit="${b.id}"&gt;แก้ไข&lt;/button&gt;
+        &lt;button data-del="${b.id}"&gt;ลบ&lt;/button&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;`).join("");
+}
+
+// กัน XSS: แปลงอักขระพิเศษก่อนยัดลง innerHTML
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&amp;&lt;&gt;"']/g, (c) =&gt; ({
+    "&amp;": "&amp;amp;", "&lt;": "&amp;lt;", "&gt;": "&amp;gt;", '"': "&amp;quot;", "'": "&amp;#39;",
+  }[c]));
+}
+</code></pre>
+
+        <div class="why">
+          <b>ทำไมต้อง <code>escapeHtml</code>?</b>
+          ถ้าชื่อหนังสือมี <code>&lt;script&gt;</code> แล้วเราเอาไปต่อใน <code>innerHTML</code> ตรง ๆ
+          โค้ดนั้นจะถูกสั่งให้ทำงาน (XSS) — และยังทำให้หน้าพังเมื่อมีเครื่องหมาย <code>&lt;</code> ในชื่อ
+        </div>
+
+        <h3>② ฟอร์มเพิ่ม/แก้ไข + ไฟล์</h3>
+        <pre><code>form.addEventListener("submit", async (e) =&gt; {
+  e.preventDefault();                       // กันไม่ให้เบราว์เซอร์โหลดหน้าใหม่
+
+  const id = document.querySelector("#book-id").value;
+  const fd = new FormData();
+  fd.append("title", document.querySelector("#book-title").value);
+  fd.append("author", document.querySelector("#book-author").value);
+  fd.append("category_id", document.querySelector("#book-category").value);
+
+  const file = document.querySelector("#book-cover").files[0];
+  if (file) fd.append("cover", file);       // ส่งเฉพาะเมื่อเลือกไฟล์
+
+  // id มีค่า = แก้ไข (PUT) / ไม่มี = สร้างใหม่ (POST)
+  await request(id ? `${API}/books/${id}` : `${API}/books`, {
+    method: id ? "PUT" : "POST",
+    body: fd,
+  });
+
+  dialog.close();
+  loadBooks();                              // โหลดใหม่ให้เห็นผล
+});
+</code></pre>
+
+        <h3>③ ปุ่มในตาราง: ใช้ event delegation</h3>
+        <pre><code>// ❌ วิธีที่พัง: ผูก listener ตอนสร้างแถว
+// พอ render ใหม่ ปุ่มเก่าหาย ปุ่มใหม่ไม่มี listener
+
+// ✅ วิธีที่ควรใช้: ผูกที่ document ครั้งเดียว แล้วดูว่า clicked อะไร
+document.addEventListener("click", async (e) =&gt; {
+  const editId = e.target.closest("[data-edit]")?.dataset.edit;
+  const delId  = e.target.closest("[data-del]")?.dataset.del;
+
+  if (editId) {
+    const book = await request(`${API}/books/${editId}`);
+    openDialog(book);                       // เอาข้อมูลเดิมมาเติมฟอร์ม
+  }
+
+  if (delId) {
+    if (!confirm("ลบเลยไหม?")) return;
+    await request(`${API}/books/${delId}`, { method: "DELETE" });
+    loadBooks();
+  }
+});
+</code></pre>
+
+        <div class="why">
+          <b>ทำไม <code>closest()</code> ไม่ใช้ <code>e.target.dataset</code> ตรง ๆ?</b>
+          เพราะผู้ใช้อาจคลิกที่ตัวอักษรหรือไอคอนข้างในปุ่ม — <code>e.target</code> จะเป็น element ลูก
+          ส่วน <code>closest()</code> จะไล่ขึ้นไปหาปุ่มที่ครอบอยู่ให้
+        </div>
+
+        <h3>④ ลำดับการเรียกตอนเปิดหน้า</h3>
+        <pre><code>(async function init() {
+  await loadCategories();   // ต้องโหลดก่อน เพื่อเติม dropdown ในฟอร์ม
+  await loadBooks();        // แล้วค่อยโหลดตาราง
+})();
+</code></pre>
+        <div class="why">
+          ถ้าสลับลำดับ ฟอร์มจะยังไม่มีตัวเลือกหมวดหมู่ → <code>select.value = ""</code> แล้วบันทึกไม่ผ่าน
+          เพราะ <code>category_id</code> ว่าง
+        </div>
+      </section>
+
+      <!-- ============================================================
+           6. PRISMA
+      ============================================================ -->
+      <section id="prisma">
+        <h2>6. ทางเลือก: Prisma (ถ้าข้อสอบใช้)</h2>
+        <p class="muted">สไลด์ในรายวิชาใช้ Prisma + SQLite — ถ้าโจทย์บังคับ ใช้สูตรนี้แทน SQL ดิบได้เลย</p>
+
+        <h3>ติดตั้ง + ตั้งค่า</h3>
+        <div class="term">
+          <span class="cmd">npm install @prisma/client</span>
+          <span class="cmd">npm install -D prisma</span>
+          <span class="cmd">npx prisma init --datasource-provider sqlite</span>
+          <span class="cmt"># คำสั่งนี้จะสร้าง prisma/schema.prisma และไฟล์ .env ให้</span>
+        </div>
+
+        <span class="file-tag">prisma/schema.prisma</span>
+        <pre><code>datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  books Book[]
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  price     Float    @default(0)
+  stock     Int      @default(0)
+  coverUrl  String?
+  createdAt DateTime @default(now())
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+</code></pre>
+
+        <div class="term">
+          <span class="cmd">npx prisma db push</span>
+          <span class="cmt"># สร้างตารางจริงใน dev.db ตาม schema (และ generate client ให้)</span>
+        </div>
+
+        <h3>เทียบคำสั่ง SQL ↔ Prisma</h3>
+        <table class="tbl">
+          <thead><tr><th>งาน</th><th>SQL (node:sqlite)</th><th>Prisma</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>ดึงทั้งหมด</td>
+              <td><code>SELECT * FROM books</code></td>
+              <td><code>await prisma.book.findMany()</code></td>
+            </tr>
+            <tr>
+              <td>ดึงตาม id</td>
+              <td><code>SELECT * FROM books WHERE id = ?</code></td>
+              <td><code>await prisma.book.findUnique({ where: { id } })</code></td>
+            </tr>
+            <tr>
+              <td>สร้าง</td>
+              <td><code>INSERT INTO books (...) VALUES (...)</code></td>
+              <td><code>await prisma.book.create({ data: {...} })</code></td>
+            </tr>
+            <tr>
+              <td>แก้ไข</td>
+              <td><code>UPDATE books SET ... WHERE id = ?</code></td>
+              <td><code>await prisma.book.update({ where: { id }, data: {...} })</code></td>
+            </tr>
+            <tr>
+              <td>ลบ</td>
+              <td><code>DELETE FROM books WHERE id = ?</code></td>
+              <td><code>await prisma.book.delete({ where: { id } })</code></td>
+            </tr>
+            <tr>
+              <td>เอาความสัมพันธ์มาด้วย</td>
+              <td><code>JOIN categories c ON ...</code></td>
+              <td><code>findMany({ include: { category: true } })</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <span class="file-tag">server.js (Express + Prisma)</span>
+        <pre><code>const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+app.get("/api/books", async (req, res, next) =&gt; {
+  try {
+    const books = await prisma.book.findMany({ include: { category: true } });
+    res.json(books);
+  } catch (err) {
+    next(err);        // ⚠ async ต้องส่ง error ผ่าน next() ไม่ใช่ throw เฉย ๆ
+  }
+});
+</code></pre>
+
+        <div class="why">
+          <b>ข้อดี:</b> ไม่ต้องเขียน SQL เอง, ได้ type/intellisense, เปลี่ยน database ทีหลังง่าย
+          <br /><b>ข้อเสียตอนสอบ:</b> ต้องรัน <code>npx prisma generate</code> ให้เสร็จก่อน ไม่งั้นจะเจอ
+          <code>@prisma/client did not initialize yet</code>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           7. CODEGEN
+      ============================================================ -->
+      <section id="codegen">
+        <h2>7. Gen โค้ดจาก OpenAPI / Postman</h2>
+        <p class="muted">ถ้าอาจารย์ให้ <code>swagger.yaml/json</code> มา อย่าเริ่มจากศูนย์</p>
+
+        <h3>อ่าน spec 3 จุดนี้ให้พอ</h3>
+        <table class="tbl">
+          <thead><tr><th>ส่วนใน spec</th><th>ใช้ทำอะไร</th></tr></thead>
+          <tbody>
+            <tr><td><code>paths</code></td><td>ได้รายการ endpoint + method ทั้งหมด → เอาไปวางโครง route</td></tr>
+            <tr><td><code>components.schemas</code></td><td>ได้ชื่อ field + ชนิดข้อมูล → เอาไปสร้างตาราง/validate</td></tr>
+            <tr><td><code>requestBody</code></td><td>ถ้าเป็น <code>multipart/form-data</code> → ต้องใช้ multer</td></tr>
+          </tbody>
+        </table>
+
+        <h3>วิธี A — openapi-generator</h3>
+        <div class="term">
+          <span class="cmd">npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o generated</span>
+          <span class="out"># generated/services/... คือไฟล์ที่เราแก้ business logic</span>
+          <span class="cmt"># generator ที่ใช้บ่อย</span>
+          <span class="cmt">#   nodejs-express-server → Express + service stubs</span>
+          <span class="cmt">#   javascript            → fetch client</span>
+          <span class="cmt">#   html2                 → เอกสาร API</span>
+        </div>
+        <div class="expect">
+          <b>หลัง gen:</b> เข้าไปดู <code>generated/</code> จะมี <code>controllers/</code> และ <code>services/</code>
+          — เติมแค่ส่วนที่ติดต่อ DB ไม่ต้องเขียน routing ใหม่
+        </div>
+
+        <h3>วิธี B — Postman</h3>
+        <ol class="tight-list">
+          <li>Import <code>openapi.yaml</code> เข้า Postman → ได้ collection ครบทุก endpoint</li>
+          <li>ยิงทดสอบทีละตัวเพื่อดู response จริง (ก่อนเขียนโค้ด)</li>
+          <li>กด <b>Code snippet</b> (ขวาบน) เลือก Node → Axios / fetch ได้โค้ดเรียก API ไปใช้ต่อ</li>
+        </ol>
+
+        <h3>วิธี C — อ่าน spec แล้วเขียนเอง (ชัวร์สุดถ้าเวลาน้อย)</h3>
+        <div class="term">
+          <span class="cmd">npx @redocly/cli lint openapi.yaml</span>
+          <span class="cmt"># ตรวจว่า spec ถูกต้อง (มี error ตรงไหนจะบอก)</span>
+          <span class="cmd">npx @redocly/cli preview-docs openapi.yaml</span>
+          <span class="cmt"># เปิดเอกสารสวย ๆ ให้ดูในเบราว์เซอร์</span>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           8. DOCKER
+      ============================================================ -->
+      <section id="docker">
+        <h2>8. Docker (ถ้าข้อสอบให้)</h2>
+        <p class="muted">เป้าหมายมีแค่: สร้าง image ที่รันแอปได้ + compose ที่ map port กับ folder</p>
+
+        <span class="file-tag">Dockerfile</span>
+        <pre><code>FROM node:24-alpine             # ใช้ Node LTS เวอร์ชันเล็ก
+
+WORKDIR /app                    # โฟลเดอร์ทำงานใน container
+
+COPY package*.json ./           # ก๊อป package.json + lock ก่อน (เพื่อ cache layer)
+RUN npm install                 # ติดตั้ง dependencies
+
+COPY . .                        # ก๊อปโค้ดที่เหลือทั้งหมด
+
+EXPOSE 3000                     # บอกว่าแอปใช้พอร์ตนี้
+CMD ["npm", "start"]            # คำสั่งเริ่มแอป
+</code></pre>
+
+        <span class="file-tag">docker-compose.yml</span>
+        <pre><code>services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"             # host:container
+    volumes:
+      - .:/app                  # แก้โค้ดในเครื่องแล้วเห็นใน container ทันที
+      - /app/node_modules       # กันไม่ให้ volume ทับ node_modules ใน container
+    environment:
+      - PORT=3000
+</code></pre>
+
+        <div class="term">
+          <span class="cmd">docker compose up --build</span>
+          <span class="out">app-1  | Server: http://localhost:3000</span>
+          <span class="cmt"># ปิดด้วย Ctrl+C แล้วลบ container</span>
+          <span class="cmd">docker compose down</span>
+        </div>
+
+        <div class="why">
+          <b>volume บรรทัด <code>/app/node_modules</code> มีไว้ทำไม?</b>
+          เพราะ <code>.:/app</code> จะเอาโฟลเดอร์เครื่องเราทับทั้งโฟลเดอร์ใน container
+          รวมถึง <code>node_modules</code> ที่เพิ่งติดตั้งไป — บรรทัดนี้บอกให้เก็บของใน container ไว้
+        </div>
+      </section>
+
+      <!-- ============================================================
+           9. GIT
+      ============================================================ -->
+      <section id="git">
+        <h2>9. Git: commit &amp; ส่งงาน</h2>
+        <p class="muted">ข้อสอบบอกให้ clone repo → แปลว่าตอนจบต้องส่งงานกลับเป็น git เช่นกัน</p>
+
+        <h3>ลำดับคำสั่งที่ใช้จริง</h3>
+        <div class="term">
+          <span class="cmt"># 1) ดูว่าแก้อะไรไปบ้าง (ยังไม่ต้อง commit)</span>
+          <span class="cmd">git status</span>
+          <span class="out">modified:   server.js</span>
+          <span class="out">modified:   db.js</span>
+          <span class="out">Untracked files: study/</span>
+
+          <span class="cmt"># 2) เลือกไฟล์ที่จะ commit (`.` = ทั้งโฟลเดอร์ปัจจุบัน)</span>
+          <span class="cmd">git add .</span>
+          <span class="cmd">git status</span>
+          <span class="out">Changes to be committed: ...</span>
+
+          <span class="cmt"># 3) บันทึกเป็น commit พร้อมข้อความสั้น ๆ</span>
+          <span class="cmd">git commit -m "feat: books CRUD + cover upload"</span>
+          <span class="out">[main 1a2b3c4] feat: books CRUD + cover upload</span>
+
+          <span class="cmt"># 4) ส่งขึ้น remote (ถ้าอาจารย์ให้ push)</span>
+          <span class="cmd">git push</span>
+          <span class="out">To https://... HEAD -&gt; main</span>
+        </div>
+
+        <div class="why">
+          <b>ทำไมต้อง <code>git add</code> ก่อน <code>git commit</code>?</b>
+          <ul>
+            <li><code>git add</code> = เลือกไฟล์ที่จะเข้า commit (staging area)</li>
+            <li><code>git commit</code> = บันทึก snapshot ของไฟล์ที่เลือกไว้</li>
+            <li><code>git push</code> = ส่ง commit ขึ้น server (GitHub/GitLab)</li>
+          </ul>
+        </div>
+
+        <div class="expect">
+          <b>ก่อน commit ต้องเห็น:</b> <code>git status</code> ไม่มี <code>node_modules/</code> หรือ <code>*.db</code> อยู่ในรายการ
+          — ถ้ามี แปลว่า <code>.gitignore</code> ยังไม่ถูกต้อง
+        </div>
+
+        <h3>ถ้า push ไม่ได้</h3>
+        <table class="tbl">
+          <thead><tr><th style="width: 40%">error</th><th>สาเหตุ / วิธีแก้</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>fatal: not a git repository</code></td>
+              <td>ยังไม่ได้ <code>git init</code> หรืออยู่ผิดโฟลเดอร์ → <code>pwd</code> แล้ว <code>cd</code> เข้าโปรเจกต์</td>
+            </tr>
+            <tr>
+              <td><code>fatal: remote origin already exists</code></td>
+              <td>มี remote อยู่แล้ว → <code>git remote -v</code> ดู แล้ว <code>git remote set-url origin &lt;url&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>Authentication failed</code></td>
+              <td>token/รหัสผ่านผิด — ใช้ Personal Access Token แทนรหัสผ่าน หรือ login ผ่าน credential manager</td>
+            </tr>
+            <tr>
+              <td><code>rejected (fetch first)</code></td>
+              <td>remote มี commit ใหม่ → <code>git pull --rebase</code> แล้ว <code>git push</code> อีกครั้ง</td>
+            </tr>
+            <tr>
+              <td><code>nothing to commit, working tree clean</code></td>
+              <td>ไม่ได้แก้อะไรจริง หรือลืม save ไฟล์ใน editor (Ctrl+S)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="danger-box">
+          <b>อย่า commit ของที่ไม่มีประโยชน์:</b> <code>node_modules/</code>, <code>*.db</code>, <code>uploads/*</code> (เก็บแค่ <code>.gitkeep</code>),
+          ไฟล์ <code>.env</code> ที่มีรหัสผ่าน — ตรวจใน <code>.gitignore</code> ก่อนทุกครั้ง
+        </div>
+      </section>
+
+      <!-- ============================================================
+           10. CHEATSHEET
+      ============================================================ -->
+      <section id="cheatsheet">
+        <h2>10. Cheat sheet</h2>
+
+        <div class="cheat-grid">
+          <div class="cheat">
+            <h4>คำสั่งที่ใช้บ่อย</h4>
+            <pre><code>npm init -y                  # สร้าง package.json
+npm i express multer         # ติดตั้งไลบรารี
+node --watch server.js       # รัน + รีสตาร์ทเมื่อแก้ไฟล์
+node db.js                   # รันสคริปต์สร้าง DB
+
+curl http://localhost:3000/api/books
+curl -X DELETE http://localhost:3000/api/books/1 -i</code></pre>
+          </div>
+
+          <div class="cheat">
+            <h4>SQL ที่ต้องเป๊ะ</h4>
+            <pre><code>SELECT * FROM books WHERE title LIKE ?;
+INSERT INTO books (a,b) VALUES (?,?);
+UPDATE books SET a=? WHERE id=?;
+DELETE FROM books WHERE id=?;
+SELECT COUNT(*) AS c FROM books;
+
+SELECT b.*, c.name AS category_name
+FROM books b JOIN categories c
+  ON c.id = b.category_id;</code></pre>
+          </div>
+
+          <div class="cheat">
+            <h4>fetch 4 แบบ</h4>
+            <pre><code>// GET
+await fetch("/api/books").then(r =&gt; r.json());
+
+// POST json
+fetch("/api/books", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload),
+});
+
+// POST file
+fetch("/api/books", { method: "POST", body: formData });
+
+// DELETE
+fetch(`/api/books/${id}`, { method: "DELETE" });</code></pre>
+          </div>
+
+          <div class="cheat">
+            <h4>status code</h4>
+            <pre><code>200  อ่าน/แก้สำเร็จ
+201  สร้างสำเร็จ
+204  ลบสำเร็จ (ไม่มี body)
+400  ข้อมูลไม่ถูกต้อง
+401  ไม่ได้ล็อกอิน
+403  ไม่มีสิทธิ์
+404  ไม่พบข้อมูล
+409  ชนกัน (ชื่อซ้ำ/ลบไม่ได้)
+500  server พัง</code></pre>
+          </div>
+
+          <div class="cheat">
+            <h4>multer + FormData</h4>
+            <pre><code>// server
+upload.single("cover")
+
+// client
+fd.append("cover", file);
+
+// ❌ ห้ามตั้ง Content-Type เอง
+fetch(url, { method: "POST", body: fd });</code></pre>
+          </div>
+
+          <div class="cheat">
+            <h4>ดีบักเร็ว ๆ</h4>
+            <pre><code>console.log(req.body, req.file);
+
+// 404 → path ผิด / static ไม่ถูกเสิร์ฟ
+// 500 → ดู stack ใน terminal
+// body ว่าง → ลืม express.json()
+// req.file undefined → field name ไม่ตรง
+// Cannot read null → id ใน HTML ไม่ตรงกับ JS</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           APPENDIX: NEXT.JS
+      ============================================================ -->
+      <section id="nextjs">
+        <h2>ภาคผนวก: Next.js CRUD + upload</h2>
+        <p class="muted">ถ้าข้อสอบให้ทำ Next.js แทน Express — หลักคิดเหมือนเดิม เปลี่ยนแค่ที่อยู่ของ route</p>
+
+        <div class="why">
+          <b>Next.js คืออะไรในประโยคเดียว:</b> React + ระบบ routing + server ในตัว
+          ไฟล์ในโฟลเดอร์ <code>app/</code> กลายเป็น URL เอง (file-based routing)
+          และ component ทุกตัวเป็น <b>Server Component โดยค่าเริ่มต้น</b>
+        </div>
+
+        <h3>สร้างโปรเจกต์</h3>
+        <div class="term">
+          <span class="cmd">npx create-next-app@latest my-app --typescript --tailwind --app --eslint</span>
+          <span class="out">✔ Would you like to use Turbopack? … Yes</span>
+          <span class="cmd">cd my-app</span>
+          <span class="cmd">npm run dev</span>
+          <span class="out">▲ Next.js 15.x</span>
+          <span class="out">- Local: http://localhost:3000</span>
+        </div>
+
+        <h3>โครงไฟล์ที่ต้องรู้</h3>
+        <table class="tbl">
+          <thead><tr><th style="width: 34%">ไฟล์</th><th>ทำอะไร</th></tr></thead>
+          <tbody>
+            <tr><td><code>app/layout.tsx</code></td><td>โครงร่วมทุกหน้า (navbar, font, provider)</td></tr>
+            <tr><td><code>app/page.tsx</code></td><td>หน้าแรกที่ <code>/</code></td></tr>
+            <tr><td><code>app/books/page.tsx</code></td><td>หน้าที่ <code>/books</code></td></tr>
+            <tr><td><code>app/api/books/route.ts</code></td><td>API ที่ <code>/api/books</code> (GET/POST)</td></tr>
+            <tr><td><code>app/api/books/[id]/route.ts</code></td><td>API ที่ <code>/api/books/:id</code> (GET/PUT/DELETE)</td></tr>
+            <tr><td><code>app/loading.tsx</code> / <code>app/error.tsx</code></td><td>หน้าโหลด / หน้า error อัตโนมัติ</td></tr>
+            <tr><td><code>public/</code></td><td>ไฟล์ static ที่เสิร์ฟเป็น URL ตรง ๆ</td></tr>
+          </tbody>
+        </table>
+
+        <h3>① Server Component — ดึงข้อมูล</h3>
+        <span class="file-tag">app/books/page.tsx</span>
+        <pre><code>// ไม่มี "use client" = Server Component: รันบน server, เป็น async ได้
+async function getBooks() {
+  // ⚠ ฝั่ง server ต้องใช้ URL เต็ม (relative "/api/books" ใช้ไม่ได้)
+  const res = await fetch("http://localhost:3000/api/books", {
+    cache: "no-store",          // ไม่ cache → ได้ข้อมูลล่าสุดทุกครั้ง
+  });
+  if (!res.ok) throw new Error("โหลดข้อมูลไม่สำเร็จ");
+  return res.json();
+}
+
+export default async function BooksPage() {
+  const { data } = await getBooks();
+
+  return (
+    &lt;ul&gt;
+      {data.map((b) =&gt; (
+        &lt;li key={b.id}&gt;{b.title} — {b.author}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+</code></pre>
+        <div class="why">
+          <b><code>key</code> ต้องมีทำไม?</b> React ใช้ <code>key</code> จับคู่รายการเก่า/ใหม่ตอน render
+          ถ้าไม่มีจะขึ้น warning และอาจแสดงผิดแถว — ใช้ <code>id</code> จาก DB เหมาะที่สุด
+        </div>
+
+        <h3>② Client Component — ฟอร์ม + upload</h3>
+        <span class="file-tag">components/BookForm.tsx</span>
+        <pre><code>"use client";   // ⚠ ต้องเป็นบรรทัดแรก ถ้าใช้ useState / onClick
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function BookForm() {
+  const router = useRouter();
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: React.FormEvent&lt;HTMLFormElement&gt;) {
+    e.preventDefault();                       // กันหน้า reload
+    const form = e.currentTarget;
+    const fd = new FormData(form);            // เก็บทุก input ที่มี name=
+
+    const res = await fetch("/api/books", { method: "POST", body: fd });
+    const body = await res.json().catch(() =&gt; null);
+
+    if (!res.ok) return setError(body?.message || "บันทึกไม่สำเร็จ");
+
+    form.reset();
+    router.refresh();                         // สั่ง Server Component โหลดข้อมูลใหม่
+  }
+
+  return (
+    &lt;form onSubmit={onSubmit}&gt;
+      &lt;input name="title" placeholder="ชื่อหนังสือ" required /&gt;
+      &lt;input name="author" placeholder="ผู้แต่ง" required /&gt;
+      &lt;input name="category_id" type="number" required /&gt;
+      &lt;input name="cover" type="file" accept="image/*" /&gt;
+      &lt;button&gt;บันทึก&lt;/button&gt;
+      {error &amp;&amp; &lt;p style={{ color: "red" }}&gt;{error}&lt;/p&gt;}
+    &lt;/form&gt;
+  );
+}
+</code></pre>
+        <div class="why">
+          <b>Next.js ส่งไฟล์ได้เองไหม?</b> ได้ — <code>new FormData(form)</code> รวมไฟล์จาก
+          <code>&lt;input type="file"&gt;</code> ให้ แล้ว fetch ส่งเป็น multipart เหมือนฝั่ง Express
+          (ห้ามตั้ง <code>Content-Type</code> เอง)
+        </div>
+
+        <h3>③ API route ใน Next (ถ้าไม่แยก Express)</h3>
+        <p>ถ้าให้ทำ API ในโปรเจกต์ Next เลย ให้สร้างไฟล์ตาม path — ชื่อโฟลเดอร์ = URL</p>
+        <span class="file-tag">app/api/books/route.ts</span>
+        <pre><code>import { NextResponse } from "next/server";
+// สมมติมี helper DB ของเราเอง (node:sqlite / Prisma)
+import { listBooks, createBook } from "@/lib/db";
+
+// GET /api/books
+export async function GET() {
+  return NextResponse.json({ data: listBooks() });
+}
+
+// POST /api/books (multipart/form-data)
+export async function POST(req: Request) {
+  // ⚠ Next ใช้ Web API ไม่ใช่ Express: ไม่มี req.body / req.file
+  const form = await req.formData();
+  const title = String(form.get("title") || "");
+  const author = String(form.get("author") || "");
+  const file = form.get("cover");            // File | null
+
+  if (!title || !author) {
+    return NextResponse.json({ message: "ข้อมูลไม่ครบ" }, { status: 400 });
+  }
+
+  let coverUrl: string | null = null;
+  if (file &amp;&amp; typeof file !== "string") {
+    const buf = Buffer.from(await file.arrayBuffer());
+    const name = `${Date.now()}-${file.name}`;
+    const fs = await import("node:fs/promises");
+    await fs.writeFile(`public/uploads/${name}`, buf);   // ต้องมีโฟลเดอร์นี้อยู่
+    coverUrl = `/uploads/${name}`;
+  }
+
+  const book = createBook({ title, author, coverUrl });
+  return NextResponse.json(book, { status: 201 });
+}
+</code></pre>
+        <div class="danger-box">
+          <b>3 กับดักของ Next.js ที่คนย้ายจาก Express พลาดบ่อย:</b>
+          <ul>
+            <li>ลืม <code>"use client"</code> แล้วใช้ <code>useState</code> → error “useState only works in Client Component”</li>
+            <li>Server Component เรียก <code>fetch("/api/books")</code> → <code>Failed to parse URL</code> (ต้องใส่ <code>http://localhost:3000</code>)</li>
+            <li>เขียนไฟล์ลง <code>public/uploads</code> แล้วหาไม่เจอ → ต้องสร้างโฟลเดอร์ก่อน และบน deploy บางที่มี public แบบ read-only</li>
+          </ul>
+        </div>
+
+        <h3>เทียบ Express ↔ Next.js</h3>
+        <table class="tbl">
+          <thead><tr><th style="width: 40%">Express</th><th>Next.js (App Router)</th></tr></thead>
+          <tbody>
+            <tr><td><code>app.get("/api/books", ...)</code></td><td><code>app/api/books/route.ts</code> → <code>export async function GET()</code></td></tr>
+            <tr><td><code>app.post(...)</code></td><td><code>export async function POST(req)</code></td></tr>
+            <tr><td><code>req.body</code></td><td><code>await req.json()</code> หรือ <code>await req.formData()</code></td></tr>
+            <tr><td><code>req.params.id</code></td><td><code>app/api/books/[id]/route.ts</code> + อ่านจาก context (Next 15 ต้อง <code>await</code>)</td></tr>
+            <tr><td><code>res.json(x)</code></td><td><code>NextResponse.json(x)</code></td></tr>
+            <tr><td><code>express.static("public")</code></td><td>เสิร์ฟ <code>public/</code> ให้อัตโนมัติ</td></tr>
+            <tr><td><code>multer</code></td><td><code>await req.formData()</code> + <code>fs.writeFile</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

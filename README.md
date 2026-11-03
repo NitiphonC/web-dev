@@ -1,9 +1,9 @@
-# Library Catalog — ตัวอย่างสำหรับสอบปฎิบัติ Web Engineering & Contemporary Technology
+# Library Catalog — ตัวอย่างสำหรับสอบปฏิบัติ Web Engineering & Contemporary Technology
 
-โปรเจกต์ตัวอย่างสำหรับซ้อมข้อสอบปฎิบัติ: **CRUD 2 ตาราง + อัปโหลดไฟล์**
+โปรเจกต์ตัวอย่างสำหรับซ้อมข้อสอบปฏิบัติ: **CRUD 2 ตาราง + อัปโหลดไฟล์**
 ใช้ **Express + SQLite (node:sqlite) + Vanilla JS** — clone แล้ว `npm install` แล้วรันได้เลย ไม่ต้องติดตั้งฐานข้อมูลเพิ่ม
 
-> มี **เว็บคู่มือสอบ** อยู่ที่ `/study/` (เปิดหลังรัน server) — สรุปเนื้อหา, cheat sheet, แนวข้อสอบ 20 + 10 + 5 ข้อ พร้อมเฉลย
+> มี **เว็บคู่มือสอบ** อยู่ที่ `/study/` (เปิดหลังรัน server) — สอนตั้งแต่เปิด terminal, อ่าน error, จับคู่ชิ้นส่วนโค้ด ไปจนถึงแนวข้อสอบ 30 + 10 + 5 ข้อ พร้อมเฉลย
 
 ---
 
@@ -21,7 +21,10 @@ npm start
 | หน้า | คำอธิบาย |
 |---|---|
 | `/` | ตัวแอป (ตารางหนังสือ + หมวดหมู่ + อัปโหลดปก) |
-| `/study/` | คู่มือสอบ + quiz + cheat sheet |
+| `/study/` | หน้าหลักคู่มือ: ภาพรวมข้อสอบ, แผน 4 ชั่วโมง, checklist |
+| `/study/build.html` | ลงมือทำทีละขั้น (terminal → DB → CRUD → upload → frontend → Git) |
+| `/study/help.html` | รวม error + วิธีอ่าน, ชิ้นส่วนที่ต้องจับคู่, วิธี adapt โจทย์ |
+| `/study/quiz.html` | แนวข้อสอบ 30 + 10 + 5 ข้อ ตรวจคะแนนได้ |
 | `/api/*` | REST API |
 
 โหมด dev (รีสตาร์ทเองเมื่อแก้ไฟล์):
@@ -50,10 +53,13 @@ npm run db:reset
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js         # fetch / FormData / render / event delegation
-├── study/             # คู่มือสอบ (static site)
-│   ├── index.html
+├── study/             # คู่มือสอบ (static site 4 หน้า)
+│   ├── index.html     # ภาพรวม + แผนเวลา + checklist
+│   ├── build.html     # สอนทีละขั้น (terminal, DB, CRUD, upload, frontend, Git)
+│   ├── help.html      # error dictionary + wiring + adapt โจทย์
+│   ├── quiz.html      # แนวข้อสอบ 45 ข้อ
 │   ├── styles.css
-│   └── app.js         # quiz data + grading
+│   └── app.js         # quiz data + grading + scroll spy + checklist
 └── uploads/           # ไฟล์ที่อัปโหลด (ignored ยกเว้น .gitkeep)
 ```
 
@@ -192,10 +198,12 @@ npx @redocly/cli preview-docs openapi.yaml
 ## แผนซ้อมก่อนสอบ
 
 1. รันโปรเจกต์นี้ให้ผ่าน 1 รอบ แล้วไล่อ่าน `server.js` ทีละ route
-2. ลบ `public/app.js` ทิ้ง แล้วเขียนใหม่จาก cheat sheet ใน `/study/#cheatsheet` ให้ได้ใน 30 นาที
-3. ลองเปลี่ยนโดเมนเป็นอย่างอื่น (products/categories, courses/lessons) แล้วทำ CRUD ใหม่ทั้งหมด
-4. ซ้อมทำ quiz ที่ `/study/#quiz` ให้ได้ ≥ 80%
-5. ลอง gen โค้ดจาก `openapi.yaml` และต่อ DB เข้ากับ service ที่ gen มา
+2. อ่าน `/study/build.html` บท 0–5 ให้เข้าใจว่าทุกคำสั่งทำอะไร และควรเห็น output อะไร
+3. ลบ `public/app.js` ทิ้ง แล้วเขียนใหม่จาก cheat sheet ให้ได้ใน 30 นาที
+4. ลองเปลี่ยนโดเมนเป็นอย่างอื่น (products/categories, courses/lessons) แล้วทำ CRUD ใหม่ทั้งหมด
+5. ซ้อมทำ quiz ที่ `/study/quiz.html` ให้ได้ ≥ 80%
+6. เปิด `/study/help.html` ตอนเจอ error — อย่าเสียเวลาเดา
+7. ลอง gen โค้ดจาก `openapi.yaml` และต่อ DB เข้ากับ service ที่ gen มา
 
 ---
 

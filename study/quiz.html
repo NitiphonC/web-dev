@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>แนวข้อสอบ — Exam Playbook</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="side">
+      <div class="side-brand">
+        <span>📝</span>
+        <div><strong>แนวข้อสอบ</strong><small>45 ข้อ + เฉลย</small></div>
+      </div>
+
+      <nav class="side-nav">
+        <a href="./index.html">← ภาพรวมข้อสอบ</a>
+        <a href="#quiz">ปรนัย 30 ข้อ</a>
+        <a href="#tf">ถูก / ผิด 10 ข้อ</a>
+        <a href="#practical">ข้อเขียน 5 ข้อ</a>
+      </nav>
+
+      <nav class="side-nav" style="margin-top: 6px; border-top: 1px solid var(--border); padding-top: 10px">
+        <a href="./build.html">📘 ลงมือทำทีละขั้น</a>
+        <a href="./help.html">🧯 แก้ error / ปรับโจทย์</a>
+        <a href="http://localhost:3000/">← ตัวแอป</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-crumb">
+        <a href="./index.html">หน้าหลัก</a><span>/</span><b>แนวข้อสอบ</b>
+      </div>
+
+      <h1 style="margin: 0 0 8px; font-size: 30px; letter-spacing: -0.02em">แนวข้อสอบ</h1>
+      <p class="lead" style="margin-top: 0">
+        ทำแล้วกด "ตรวจคำตอบ" — ข้อที่ผิดจะขึ้นเฉลยพร้อมเหตุผล ใช้ทบทวนก่อนสอบ
+      </p>
+
+      <section id="quiz">
+        <div class="quiz-block">
+          <h3>ตอนที่ 1 — ปรนัย 30 ข้อ</h3>
+          <p class="muted" style="margin-top: 0">เลือกคำตอบที่ถูกที่สุด</p>
+          <div id="mcq"></div>
+        </div>
+      </section>
+
+      <section id="tf">
+        <div class="quiz-block">
+          <h3>ตอนที่ 2 — ถูก / ผิด 10 ข้อ</h3>
+          <div id="tf-box"></div>
+        </div>
+      </section>
+
+      <section id="practical">
+        <div class="quiz-block">
+          <h3>ตอนที่ 3 — ข้อเขียน / ลงมือทำ 5 ข้อ</h3>
+          <p class="muted" style="margin-top: 0">ลองตอบในหัวก่อน แล้วกดดูแนวคำตอบ</p>
+          <div id="practical-box"></div>
+        </div>
+      </section>
+
+      <div class="quiz-actions">
+        <button class="btn btn-primary" id="grade-btn">ตรวจคำตอบ</button>
+        <button class="btn" id="reset-btn">ล้างคำตอบ</button>
+        <span id="score" class="score"></span>
+      </div>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
