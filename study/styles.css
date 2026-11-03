@@ -549,6 +549,7 @@ pre code { color: inherit; }
   .side-brand { flex: none; }
   .side-brand div { display: none; }
   .main { padding: 28px 20px 90px; }
+  section { scroll-margin-top: 88px; }
   .timeline::before { left: 0; }
   .timeline li { flex-direction: column; gap: 8px; }
   .timeline .t { flex: none; width: fit-content; padding: 4px 12px; }

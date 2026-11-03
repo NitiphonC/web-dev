@@ -15,6 +15,7 @@
       </div>
       <nav class="side-nav">
         <a href="#overview">ภาพรวมข้อสอบ</a>
+        <a href="#assignments">งานใน Classroom → ข้อสอบ</a>
         <a href="#plan">แผนเวลา 4 ชั่วโมง</a>
         <a href="#checklist">Checklist ก่อนลงมือ</a>
         <a href="#clone">1. Clone &amp; Run</a>
@@ -68,6 +69,86 @@
             </ul>
           </article>
         </div>
+      </section>
+
+      <!-- ============ ASSIGNMENTS ============ -->
+      <section id="assignments">
+        <h2>งานใน Classroom → ข้อสอบ</h2>
+        <p class="muted">ทุกงานที่ส่งมาแล้วคือการซ้อม — นี่คือการแมปว่าชิ้นไหนเอาไปใช้ตอนสอบได้</p>
+
+        <table class="tbl">
+          <thead>
+            <tr><th>งานที่ทำแล้ว</th><th>ทักษะที่ได้</th><th>ใช้ตอนสอบยังไง</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>โจทย์แบบฝึกหัด: Book Catalog API</b><br /><span class="muted">ยังไม่ต่อ DB — จำลองข้อมูล</span></td>
+              <td>REST 5 endpoint, status 200 / 201 / 404, CRUD พื้นฐาน</td>
+              <td>ใช้เป็นโครง route ทั้งหมด — ในห้องสอบเปลี่ยนจาก array เป็น DB</td>
+            </tr>
+            <tr>
+              <td><b>สร้าง api Book, Review</b></td>
+              <td>เลือก Express / Fastify / NestJS + ออกแบบ 2 ตารางที่มี relation</td>
+              <td>ใกล้ข้อสอบที่สุด — books 1:N reviews คือ pattern เดียวกับ categories 1:N books</td>
+            </tr>
+            <tr>
+              <td><b>สร้าง next.js เชื่อมกับ backend</b></td>
+              <td>CRUD ผ่าน UI + อัปโหลดไฟล์</td>
+              <td>ถ้าข้อสอบให้ HTML/CSS มา = เหลือแค่ JS เหมือนงานนี้</td>
+            </tr>
+            <tr>
+              <td><b>สร้าง Dockerfile + Docker Compose</b></td>
+              <td>base image, volume, port mapping</td>
+              <td>ถ้าโจทย์ให้รันผ่าน <code>docker compose up</code></td>
+            </tr>
+            <tr>
+              <td><b>Workshop 1–2 (Mermaid)</b></td>
+              <td>Flowchart + diagram สถาปัตยกรรม 3 tiers</td>
+              <td>ข้อเขียนเชิงอธิบาย / วางระบบ</td>
+            </tr>
+            <tr>
+              <td><b>สไลด์: Node.js, RESTful &amp; GraphQL, Next.js, Client-Side Overview</b></td>
+              <td>ทฤษฎี คำศัพท์ และ comparison</td>
+              <td>ข้อกา / ถูก–ผิด</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>สเปกงาน Book Catalog API (จำให้แม่น)</h3>
+        <div class="grid">
+          <div class="panel">
+            <h4>Data model</h4>
+            <ul class="tight">
+              <li><code>id</code> Number</li>
+              <li><code>title</code> String</li>
+              <li><code>author</code> String</li>
+              <li><code>publishedYear</code> Number</li>
+              <li><code>isAvailable</code> Boolean</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h4>Endpoints</h4>
+            <ul class="tight">
+              <li><code>GET /books</code> , <code>GET /books/:id</code></li>
+              <li><code>POST /books</code></li>
+              <li><code>PUT /books/:id</code></li>
+              <li><code>DELETE /books/:id</code></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h4>Status ที่ต้องตอบ</h4>
+            <ul class="tight">
+              <li><code>200 OK</code> อ่าน / แก้ไข / ลบสำเร็จ</li>
+              <li><code>201 Created</code> สร้างใหม่สำเร็จ</li>
+              <li><code>404 Not Found</code> ไม่พบ id</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="callout">
+          งาน <b>Book Catalog API</b> ไม่ต้องใช้ฐานข้อมูล (จำลอง array) แต่ข้อสอบปฎิบัติเน้น <b>2 ตาราง + upload</b>
+          → เอาโครง route จากงานนี้ แล้วเปลี่ยนที่เก็บข้อมูลเป็น SQLite หรือ Prisma
+        </p>
       </section>
 
       <!-- ============ PLAN ============ -->
