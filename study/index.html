@@ -18,6 +18,7 @@
         <a href="#overview">ภาพรวมข้อสอบ</a>
         <a href="#start">เริ่มอ่านตรงไหน</a>
         <a href="#assignments">งานใน Classroom</a>
+        <a href="#theory">ทฤษฎีที่ออกข้อสอบสูง</a>
         <a href="#plan">แผนเวลา 4 ชั่วโมง</a>
         <a href="#checklist">Checklist ก่อนลงมือ</a>
         <a href="#rules">กติกา / ความเสี่ยง</a>
@@ -138,7 +139,7 @@
             <tr>
               <td><b>สไลด์: Node.js, RESTful &amp; GraphQL, Next.js, Client-Side Overview</b></td>
               <td>ทฤษฎี คำศัพท์ และ comparison</td>
-              <td>ข้อกา / ถูก–ผิด</td>
+              <td>ปรนัย / ถูก–ผิด</td>
             </tr>
           </tbody>
         </table>
@@ -178,6 +179,93 @@
           งาน <b>Book Catalog API</b> ไม่ต้องใช้ฐานข้อมูล (จำลอง array) แต่ข้อสอบปฏิบัติเน้น <b>2 ตาราง + upload</b>
           → เอาโครง route จากงานนี้ แล้วเปลี่ยนที่เก็บข้อมูลเป็น SQLite หรือ Prisma
         </p>
+      </section>
+
+      <!-- ============ THEORY ============ -->
+      <section id="theory">
+        <h2>ทฤษฎีจากสไลด์ที่ออกข้อสอบสูง</h2>
+        <p class="muted">สรุปจากสไลด์ Node.js, RESTful &amp; GraphQL, Client-Side และ Server-Side — จำคำเหล่านี้ให้ได้</p>
+
+        <table class="tbl">
+          <thead>
+            <tr><th style="width: 26%">หัวข้อ</th><th>ต้องจำ</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Node.js</b></td>
+              <td>JavaScript Runtime บน <b>V8</b>, single-threaded + <b>Event Loop</b> → เหมาะงาน <b>I/O-bound</b> (chat, streaming, API); งาน CPU-heavy จะบล็อก loop → ใช้ worker threads / cluster</td>
+            </tr>
+            <tr>
+              <td><b>TypeScript</b></td>
+              <td>รันบน Node/browser ตรง ๆ ไม่ได้ ต้อง <b>transpile</b> เป็น JavaScript ก่อน; <code>import type</code> ถูกตัดทิ้งตอน build</td>
+            </tr>
+            <tr>
+              <td><b>REST</b></td>
+              <td>resource + URI คงที่, <b>stateless</b>, ใช้ HTTP methods, JSON; จุดอ่อน over-fetching / under-fetching</td>
+            </tr>
+            <tr>
+              <td><b>GraphQL</b></td>
+              <td>endpoint เดียว <code>/graphql</code>, client เลือก field ได้, แก้ over/under-fetching; caching ยากกว่า REST</td>
+            </tr>
+            <tr>
+              <td><b>gRPC</b></td>
+              <td><b>HTTP/2 + Protocol Buffers</b> (binary), รองรับ streaming, เหมาะ microservices ภายใน; browser ต้องใช้ proxy</td>
+            </tr>
+            <tr>
+              <td><b>Express</b></td>
+              <td>minimal framework, middleware <code>(req, res, next)</code>, error handler ต้องมี <b>4 พารามิเตอร์</b></td>
+            </tr>
+            <tr>
+              <td><b>Fastify</b></td>
+              <td>high throughput, validate ด้วย <b>JSON Schema (Ajv)</b> ก่อนถึง handler</td>
+            </tr>
+            <tr>
+              <td><b>NestJS</b></td>
+              <td>แนวเดียวกับ Angular: <b>Module + Dependency Injection + Decorators</b>, เหมาะระบบองค์กร</td>
+            </tr>
+            <tr>
+              <td><b>Prisma</b></td>
+              <td>ORM: <code>schema.prisma</code> → <code>npx prisma db push</code> → <code>prisma.book.findMany()</code> (type-safe)</td>
+            </tr>
+            <tr>
+              <td><b>CSR / SSR / SSG / ISR</b></td>
+              <td>CSR = browser render ด้วย JS; SSR = server ส่ง HTML พร้อมข้อมูล; SSG = สร้างตอน build; ISR = อัปเดตทีละหน้าแบบมีช่วงเวลา</td>
+            </tr>
+            <tr>
+              <td><b>React</b></td>
+              <td><b>JSX</b>, <b>Virtual DOM</b> + reconciliation, Hooks (<code>useState</code>, <code>useEffect</code>)</td>
+            </tr>
+            <tr>
+              <td><b>Vue</b></td>
+              <td><b>Single-File Component</b> (.vue), Composition API, reactivity แบบ Proxy</td>
+            </tr>
+            <tr>
+              <td><b>Angular</b></td>
+              <td>TypeScript-first, <b>Dependency Injection</b>, RxJS + Signals</td>
+            </tr>
+            <tr>
+              <td><b>Svelte / SolidJS</b></td>
+              <td><b>ไม่มี Virtual DOM</b> — Svelte compile เป็น JS ตรง ๆ (Runes: <code>$state</code>), Solid ใช้ fine-grained signals</td>
+            </tr>
+            <tr>
+              <td><b>Astro / Qwik</b></td>
+              <td>Astro = <b>Islands</b> + zero JS by default; Qwik = <b>Resumability</b> ไม่ต้อง hydration ทั้งหน้า</td>
+            </tr>
+            <tr>
+              <td><b>Docker</b></td>
+              <td>image = template, container = instance ที่รัน; <b>volume</b> map โฟลเดอร์, <code>ports: "3000:3000"</code> = host:container</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="why">
+          <b>3 คู่ที่ชอบหลอกในข้อสอบ:</b>
+          <ul>
+            <li><b>PUT vs PATCH</b> — PUT แทนที่ทั้ง resource, PATCH แก้บาง field</li>
+            <li><b>POST vs PUT</b> — POST สร้างใหม่ (non-idempotent), PUT แทนที่/idempotent</li>
+            <li><b>SSR vs CSR</b> — SSR ได้ HTML พร้อมข้อมูล (SEO ดี), CSR ได้ HTML เปล่าแล้วรอ JS</li>
+          </ul>
+        </div>
       </section>
 
       <!-- ============ PLAN ============ -->
@@ -225,7 +313,7 @@
             <span class="t">3:30 – 4:00</span>
             <div>
               <strong>เก็บงาน + กันพัง</strong>
-              <p>validate, error message, ทดสอบทุกปุ่ม, ข้อกา</p>
+              <p>validate, error message, ทดสอบทุกปุ่ม, ข้อสอบปรนัย</p>
             </div>
           </li>
         </ol>
@@ -267,7 +355,7 @@
           <li>ลบ <code>public/app.js</code> แล้วเขียนใหม่จาก cheat sheet ให้ได้ใน 30 นาที</li>
           <li>จำสูตร multer + FormData ให้ขึ้นใจ</li>
           <li>ลอง <code>npx @openapitools/openapi-generator-cli generate</code> กับ <code>openapi.yaml</code> ในโปรเจกต์นี้</li>
-          <li>ซ้อมข้อกา 45 ข้อในหน้า <a href="./quiz.html">แนวข้อสอบ</a> ให้ได้ ≥ 80%</li>
+          <li>ซ้อมข้อสอบ 45 ข้อในหน้า <a href="./quiz.html">แนวข้อสอบ</a> ให้ได้ ≥ 80%</li>
         </ol>
       </section>
     </main>
